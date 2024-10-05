@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "calendario_visite_mediche")
 public class VisitaMedica extends EventoAbstr {
     @ManyToOne(fetch = FetchType.LAZY)

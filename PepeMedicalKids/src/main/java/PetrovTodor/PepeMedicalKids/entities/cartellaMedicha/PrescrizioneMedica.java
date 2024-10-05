@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
+package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import com.fasterxml.jackson.annotation.JsonFormat;

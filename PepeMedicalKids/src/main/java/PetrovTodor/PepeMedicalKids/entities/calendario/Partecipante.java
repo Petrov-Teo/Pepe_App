@@ -2,10 +2,7 @@ package PetrovTodor.PepeMedicalKids.entities.calendario;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPartecipante;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -13,6 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "calendario_partecipanti")
 public class Partecipante {
     @Id

@@ -2,10 +2,7 @@ package PetrovTodor.PepeMedicalKids.entities.serviziPrenotabili;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "listino_visite")
 public class VisitaPrenotabile {
     @Id

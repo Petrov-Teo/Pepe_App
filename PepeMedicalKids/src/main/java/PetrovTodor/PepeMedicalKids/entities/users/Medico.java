@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -18,8 +19,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "personale_medico")
 @NoArgsConstructor
+@ToString
+@Table(name = "personale_medico")
 public class Medico extends User {
     @Column(unique = true)
     private String codMedico;

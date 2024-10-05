@@ -1,10 +1,11 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
+package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "prescrizione_analisi_mediche")
 public class AnalisiMediche extends PrescrizioneMedica {
     private String codAnalisi;

@@ -6,6 +6,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,10 +15,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "personale_desk")
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
+@Table(name = "personale_desk")
 public class Receptionist extends User {
     private String codReceptionist;
     private LocalDate dataAssunzione;

@@ -1,13 +1,10 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
+package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -18,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "cartelle_mediche")
 public class CartellaMedica {
     @Id

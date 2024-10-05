@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
+package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Table(name = "CurRegionale")
 public class AnalisiRegionali {
     @Id
