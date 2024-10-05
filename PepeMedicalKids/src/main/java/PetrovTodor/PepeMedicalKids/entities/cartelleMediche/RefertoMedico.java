@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "referti_medici")
+@Table(name = "prescrizione_referti_medici")
 public class RefertoMedico extends PrescrizioneMedica {
 
     private String codRefertoMedico;

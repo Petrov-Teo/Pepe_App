@@ -46,4 +46,14 @@ public abstract class User implements UserDetails {
         this.password = password;
         this.numeroDiTelefono = numeroDiTelefono;
     }
+
+    public User(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, Ruolo ruolo) {
+        this.codiceFiscale = codiceFiscale;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.dataDiNascita = dataDiNascita;
+        this.luogoDiNascita = luogoDiNascita;
+        this.ruolo = ruolo;
+    }
+
 }

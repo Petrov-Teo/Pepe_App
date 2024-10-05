@@ -16,7 +16,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "certificati_medici")
+@Table(name = "prescrizione_certificati_medici")
 public class CertificatoMedico extends PrescrizioneMedica {
     private String codCertificatoMedico;
     private int giorniPrognosi;

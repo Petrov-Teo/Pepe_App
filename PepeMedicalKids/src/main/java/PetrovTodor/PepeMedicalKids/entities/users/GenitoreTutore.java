@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "genitoriTutori")
+@Table(name = "user_genitoriTutori")
 public class GenitoreTutore extends User {
     private String codGenitore;
     private String note;

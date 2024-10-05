@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "pazienti")
+@Table(name = "user_pazienti")
 public class Paziente extends User {
     @ManyToOne
     public GenitoreTutore genitoreTutore;
@@ -28,7 +28,7 @@ public class Paziente extends User {
 
 
     public Paziente(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, Ruolo ruolo, String email, String password, long numeroDiTelefono, GenitoreTutore genitoreTutore, String codPaziente, String note) {
-        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, ruolo, email, password, numeroDiTelefono);
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, ruolo);
         this.genitoreTutore = genitoreTutore;
         this.codPaziente = codPaziente;
         this.note = note;

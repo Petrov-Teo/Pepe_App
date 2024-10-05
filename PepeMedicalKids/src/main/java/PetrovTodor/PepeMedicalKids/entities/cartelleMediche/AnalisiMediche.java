@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "analisi_mediche")
+@Table(name = "prescrizione_analisi_mediche")
 public class AnalisiMediche extends PrescrizioneMedica {
     private String codAnalisi;
     @OneToMany

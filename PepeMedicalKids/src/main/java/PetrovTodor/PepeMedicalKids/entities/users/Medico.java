@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "medici")
+@Table(name = "personale_medico")
 @NoArgsConstructor
 public class Medico extends User {
     @Column(unique = true)
