@@ -1,8 +1,7 @@
 package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,13 +17,18 @@ import java.util.List;
 @Table(name = "analisi_mediche")
 public class AnalisiMediche extends PrescrizioneMedica {
     private String codAnalisi;
-    private List<AnalisiRegionali> AnalisiRegionali;
+    @OneToMany
+    private List<AnalisiRegionali> analisiRegionali;
+
+    @ManyToOne
+    @JoinColumn(name = "cartella_id")
+    private CartellaMedica cartellaMedica;
 
 
-    public AnalisiMediche(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codAnalisi, List<PetrovTodor.PepeMedicalKids.entities.cartelleMediche.AnalisiRegionali> analisiRegionali) {
+    public AnalisiMediche(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codAnalisi, List<AnalisiRegionali> analisiRegionali) {
         super(dataPrescrizione, ora, tipoPrescrizione, note);
         this.codAnalisi = codAnalisi;
-        AnalisiRegionali = analisiRegionali;
+        this.analisiRegionali = analisiRegionali;
     }
 
     public void setNumCertificato(String ultimoNumero) {

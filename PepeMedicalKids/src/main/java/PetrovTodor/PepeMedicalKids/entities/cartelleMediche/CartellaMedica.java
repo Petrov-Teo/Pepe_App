@@ -29,15 +29,18 @@ public class CartellaMedica {
     private LocalDate dataCreazione;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "codMedico")
+    @JoinColumn(referencedColumnName = "codMedico", nullable = false)
     private Medico medico;
     @ManyToOne
-    @JoinColumn(name = "codPaziente")
+    @JoinColumn(name = "codPaziente", nullable = false)
     private Paziente paziente;
 
     @OneToMany(mappedBy = "cartellaMedica", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PrescrizioneMedica> prescrizioneMedica;
-
+    private List<AnalisiMediche> prescrizioneAnalisi;
+    @OneToMany(mappedBy = "cartellaMedica", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RefertoMedico> prescrizioneReferto;
+    @OneToMany(mappedBy = "cartellaMedica", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CertificatoMedico> prescrizioneCertificato;
 
     public CartellaMedica(Medico medico, Paziente paziente) {
         this.dataCreazione = LocalDate.now();

@@ -2,6 +2,8 @@ package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,9 @@ public class RefertoMedico extends PrescrizioneMedica {
 
     private String codRefertoMedico;
     private String oggetto;
+    @ManyToOne
+    @JoinColumn(name = "cartella_id")
+    private CartellaMedica cartellaMedica;
 
 
     public RefertoMedico(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codRefertoMedico, String oggetto) {

@@ -2,6 +2,8 @@ package PetrovTodor.PepeMedicalKids.entities.cartelleMediche;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,9 @@ import java.time.LocalTime;
 public class CertificatoMedico extends PrescrizioneMedica {
     private String codCertificatoMedico;
     private int giorniPrognosi;
+    @ManyToOne
+    @JoinColumn(name = "cartella_id")
+    private CartellaMedica cartellaMedica;
 
     public CertificatoMedico(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codCertificatoMedico, int giorniPrognosi) {
         super(dataPrescrizione, ora, tipoPrescrizione, note);

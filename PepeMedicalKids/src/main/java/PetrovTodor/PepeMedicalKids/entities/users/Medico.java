@@ -2,6 +2,7 @@ package PetrovTodor.PepeMedicalKids.entities.users;
 
 
 import PetrovTodor.PepeMedicalKids.enums.Ruolo;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import java.util.List;
 @Table(name = "medici")
 @NoArgsConstructor
 public class Medico extends User {
+    @Column(unique = true)
     private String codMedico;
     private String specializzazione;
     private String iscrizioneAlboN;

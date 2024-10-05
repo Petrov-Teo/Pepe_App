@@ -1,6 +1,7 @@
 package PetrovTodor.PepeMedicalKids.entities.users;
 
 import PetrovTodor.PepeMedicalKids.enums.Ruolo;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,6 +22,7 @@ import java.util.List;
 public class Paziente extends User {
     @ManyToOne
     public GenitoreTutore genitoreTutore;
+    @Column(unique = true)
     private String codPaziente;
     private String note;
 
