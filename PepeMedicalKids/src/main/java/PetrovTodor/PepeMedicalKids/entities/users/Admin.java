@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users;
+package PetrovTodor.PepeMedicalKids.entities.users;
 
 
 import PetrovTodor.PepeMedicalKids.enums.Ruolo;
@@ -22,10 +22,6 @@ import java.util.Collections;
 public class Admin extends User {
     private String codAdmin;
 
-    public Admin(String codAdmin) {
-        this.codAdmin = codAdmin;
-    }
-
     public Admin(String codiceFiscale,
                  String nome,
                  String cognome,
@@ -43,7 +39,7 @@ public class Admin extends User {
     public void generaCodice(String ultimoCodice) {
         String primaLetteraRuolo = String.valueOf(this.getRuolo().name().charAt(0));
         int codiceBase = 100;
-        this.codAdmin = primaLetteraRuolo + codiceBase + ultimoCodice;
+        this.codAdmin = primaLetteraRuolo + "/" + codiceBase + ultimoCodice;
     }
 
     @Override

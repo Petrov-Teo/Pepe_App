@@ -1,7 +1,7 @@
 package PetrovTodor.PepeMedicalKids.security;
 
 
-import PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users.Admin;
+import PetrovTodor.PepeMedicalKids.entities.users.Admin;
 import PetrovTodor.PepeMedicalKids.services.AdminService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +36,7 @@ public class JWTChekFilter extends OncePerRequestFilter {
         String accessToken = authHeader.replace("Bearer ", "");
 
         jwtTools.verifyToken(accessToken);
-        String id = jwtTools.extractDipendentefromTken(accessToken);
+        String id = jwtTools.extractDipendenteFromToken(accessToken);
         Optional<Admin> userAttuale = this.userService.findById(UUID.fromString(id));
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userAttuale, null, userAttuale.get().getAuthorities());

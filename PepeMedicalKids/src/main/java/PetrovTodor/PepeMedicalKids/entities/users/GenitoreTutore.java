@@ -1,6 +1,7 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users;
+package PetrovTodor.PepeMedicalKids.entities.users;
 
-import PePe.S.r.l.PePe.Medical.Kids.enums.TipoTutore;
+
+import PetrovTodor.PepeMedicalKids.enums.TipoTutore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -24,6 +25,13 @@ public class GenitoreTutore extends User {
 
     @OneToMany(mappedBy = "genitoreTutore")
     private List<Paziente> pazienti;
+
+
+    public void generaCodice(String ultimoCodice) {
+        String primaLetteraRuolo = String.valueOf(this.getRuolo().name().charAt(0));
+        int codiceBase = 100;
+        this.codGenitore = primaLetteraRuolo + codiceBase + ultimoCodice;
+    }
 
 
     @Override

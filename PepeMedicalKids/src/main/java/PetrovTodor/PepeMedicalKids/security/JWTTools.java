@@ -1,7 +1,7 @@
 package PetrovTodor.PepeMedicalKids.security;
 
 
-import PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users.User;
+import PetrovTodor.PepeMedicalKids.entities.users.User;
 import PetrovTodor.PepeMedicalKids.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -16,7 +16,7 @@ public class JWTTools {
     private String secret;
 
 
-    public String creatToken(User utente) {
+    public String createToken(User utente) {
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis())) //<-- vanno messi in millisecondi
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) //<-- scadenza del token sempre in millisecondi
@@ -33,7 +33,7 @@ public class JWTTools {
         }
     }
 
-    public String extractDipendentefromTken(String accessToken) {
+    public String extractDipendenteFromToken(String accessToken) {
         return Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parseSignedClaims(accessToken).getPayload().getSubject();
     }
 }

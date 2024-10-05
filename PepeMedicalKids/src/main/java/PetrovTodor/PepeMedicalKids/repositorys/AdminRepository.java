@@ -1,7 +1,7 @@
 package PetrovTodor.PepeMedicalKids.repositorys;
 
 
-import PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users.Admin;
+import PetrovTodor.PepeMedicalKids.entities.users.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

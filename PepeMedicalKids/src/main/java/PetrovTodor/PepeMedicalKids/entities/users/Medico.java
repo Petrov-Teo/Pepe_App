@@ -1,6 +1,7 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users;
+package PetrovTodor.PepeMedicalKids.entities.users;
 
-import PePe.S.r.l.PePe.Medical.Kids.enums.Ruolo;
+
+import PetrovTodor.PepeMedicalKids.enums.Ruolo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;

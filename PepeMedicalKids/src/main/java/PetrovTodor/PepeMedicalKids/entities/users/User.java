@@ -1,9 +1,11 @@
-package PetrovTodor.PepeMedicalKids.entities.cartelleMediche.users;
+package PetrovTodor.PepeMedicalKids.entities.users;
 
 
-import PePe.S.r.l.PePe.Medical.Kids.enums.Ruolo;
+import PetrovTodor.PepeMedicalKids.enums.Ruolo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -23,6 +25,8 @@ public abstract class User implements UserDetails {
     private String codiceFiscale;
     private String nome;
     private String cognome;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataDiNascita;
     private String luogoDiNascita;
     @Enumerated(EnumType.STRING)

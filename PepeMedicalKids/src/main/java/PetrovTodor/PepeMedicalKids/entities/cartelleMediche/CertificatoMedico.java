@@ -14,22 +14,20 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "referti_medici")
-public class RefertoMedico extends PrescrizioneMedica {
+@Table(name = "certificati_medici")
+public class CertificatoMedico extends PrescrizioneMedica {
+    private String codCertificatoMedico;
+    private int giorniPrognosi;
 
-    private String codRefertoMedico;
-    private String oggetto;
-
-
-    public RefertoMedico(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codRefertoMedico, String oggetto) {
+    public CertificatoMedico(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codCertificatoMedico, int giorniPrognosi) {
         super(dataPrescrizione, ora, tipoPrescrizione, note);
-        this.codRefertoMedico = codRefertoMedico;
-        this.oggetto = oggetto;
+        this.codCertificatoMedico = codCertificatoMedico;
+        this.giorniPrognosi = giorniPrognosi;
     }
 
     public void setNumCertificato(String ultimoNumero) {
         String primaLetteraRuolo = String.valueOf(this.getTipoPrescrizione().name().charAt(0));
         int numeroPartenza = 0;
-        this.codRefertoMedico = primaLetteraRuolo + "/" + numeroPartenza + ultimoNumero;//Da creare query per la ricerca dell'ultimo codice
+        this.codCertificatoMedico = primaLetteraRuolo + "/" + numeroPartenza + ultimoNumero;//Da creare query per la ricerca dell'ultimo codice
     }
 }
