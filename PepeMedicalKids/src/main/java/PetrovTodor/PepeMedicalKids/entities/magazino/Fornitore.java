@@ -27,9 +27,10 @@ public class Fornitore {
     private int partitaIva;
 
 
-    @OneToMany(mappedBy = "fornitore")
+    @OneToMany(mappedBy = "fornitore", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Articolo> articoli = new ArrayList<>();
+
 
     public Fornitore(String nome, String indirizzo, List<String> telefono, List<String> email, String codiceFiscale, int partitaIva, List<Articolo> articoli) {
         this.nome = nome;
@@ -40,7 +41,6 @@ public class Fornitore {
         this.partitaIva = partitaIva;
         this.articoli = articoli;
     }
-
 
     public void aggiungiArticolo(Articolo articolo) {
         articoli.add(articolo);

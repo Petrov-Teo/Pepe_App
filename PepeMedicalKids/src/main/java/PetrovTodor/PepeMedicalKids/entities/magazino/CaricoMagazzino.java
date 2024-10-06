@@ -21,6 +21,7 @@ public class CaricoMagazzino {
     @Setter(AccessLevel.NONE)
     private UUID idCaricoMagazzino;
     private String codiceCarico;
+    @OneToMany(mappedBy = "caricoMagazzino", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Articolo> articoli;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -30,7 +31,7 @@ public class CaricoMagazzino {
     private int contatoreProgressivo = 0;
 
     @ManyToOne
-    @JoinColumn(name = "fornitore_id")
+    @JoinColumn(name = "codiceFornitore")
     private Fornitore fornitore;
 
     public CaricoMagazzino(List<Articolo> articoli, LocalDate dataCarico, String numeroDocumentoFornitore, Fornitore fornitore) {

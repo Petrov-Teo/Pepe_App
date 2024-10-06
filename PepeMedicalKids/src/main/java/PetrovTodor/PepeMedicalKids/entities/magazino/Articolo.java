@@ -23,7 +23,10 @@ public class Articolo {
     private String codiceArticolo;
     private String nome;
     private String descrizione;
+
+    @Enumerated(EnumType.STRING)
     private TipoArticolo tipoArticolo;
+
     private int quantita;
     private int giacenza;
     private boolean liquido;
@@ -34,9 +37,16 @@ public class Articolo {
 
     private double costoAcquisto;
 
+    @ManyToOne
+    @JoinColumn(name = "codiceCarico")
+    private CaricoMagazzino caricoMagazzino;
 
     @ManyToOne
-    @JoinColumn(name = "fornitore_id")
+    @JoinColumn(name = "codiceMovimentazione")
+    private MovimentazioneMagazzino movimentazioneMagazzino;
+
+    @ManyToOne
+    @JoinColumn(name = "codiceFornitore")
     private Fornitore fornitore;
 
     // Costruttore
@@ -51,7 +61,6 @@ public class Articolo {
         this.costoAcquisto = costoAcquisto;
         this.fornitore = fornitore;
     }
-
 
     public void aggiornaGiacenza(int quantitaAggiunta) {
         if (quantitaAggiunta < 0) {

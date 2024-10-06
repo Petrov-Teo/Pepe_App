@@ -1,5 +1,6 @@
 package PetrovTodor.PepeMedicalKids.entities.manutenzioni;
 
+import PetrovTodor.PepeMedicalKids.entities.magazino.Fornitore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,13 +22,15 @@ public class ContrattoManutenzione {
     private LocalDate dataInizio;
     private LocalDate dataFine;
     private int numeroInterventiOrdinari;
-    private String fornitore; // TO DO : creare e sostituire fornitore con relazione
+    @ManyToOne
+    @JoinColumn(name = "codiceFornitore", nullable = false)
+    private Fornitore fornitore;
 
     @ManyToOne
     @JoinColumn(name = "idMacchinario", nullable = false)
     private Macchinario macchinario;
 
-    public ContrattoManutenzione(String codiceContratto, LocalDate dataInizio, LocalDate dataFine, int numeroInterventiOrdinari, String fornitore, Macchinario macchinario) {
+    public ContrattoManutenzione(String codiceContratto, LocalDate dataInizio, LocalDate dataFine, int numeroInterventiOrdinari, Fornitore fornitore, Macchinario macchinario) {
         this.codiceContratto = codiceContratto;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;

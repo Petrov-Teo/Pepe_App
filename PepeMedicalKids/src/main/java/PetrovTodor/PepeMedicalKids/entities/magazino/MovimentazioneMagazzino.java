@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,12 +26,14 @@ public class MovimentazioneMagazzino {
     private String codiceMovimentazione;
 
     @OneToMany(mappedBy = "movimentazioneMagazzino", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Articolo> articoli;
+    private List<Articolo> articoli = new ArrayList<>();
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataMovimentazione;
-
+    @Enumerated(EnumType.STRING)
     private ZonaUtilizzo zonaUtilizzo;
+
     @ManyToOne
     @JoinColumn(name = "codMedico")
     private Medico medico;
@@ -38,19 +41,13 @@ public class MovimentazioneMagazzino {
     private int ultimoAnno = -1;
     private int contatoreProgressivo = 0;
 
-    @ManyToOne
-    @JoinColumn(name = "fornitore_id")
-    private Fornitore fornitore; // Fornitore associato
-
-    // Costruttore per zone non mediche
-    public MovimentazioneMagazzino(List<Articolo> articoli, LocalDate dataMovimentazione, ZonaUtilizzo zonaUtilizzo, Fornitore fornitore) {
+    public MovimentazioneMagazzino(List<Articolo> articoli, LocalDate dataMovimentazione, ZonaUtilizzo zonaUtilizzo) {
         this.articoli = articoli;
         this.dataMovimentazione = dataMovimentazione;
         this.zonaUtilizzo = zonaUtilizzo;
-        this.medico = null; // Non necessario
-        this.ultimoAnno = -1; // Inizializzazione di default
-        this.contatoreProgressivo = 0; // Inizializzazione di default
-        this.fornitore = fornitore;
+        this.medico = null;
+        this.ultimoAnno = -1;
+        this.contatoreProgressivo = 0;
     }
 
     // Costruttore per zone mediche
@@ -58,26 +55,21 @@ public class MovimentazioneMagazzino {
         this.articoli = articoli;
         this.dataMovimentazione = dataMovimentazione;
         this.zonaUtilizzo = zonaUtilizzo;
-        this.medico = medico; // Necessario solo per la zona MEDICO
-        this.ultimoAnno = -1; // Inizializzazione di default
-        this.contatoreProgressivo = 0; // Inizializzazione di default
+        this.medico = medico;
+        this.ultimoAnno = -1;
+        this.contatoreProgressivo = 0;
     }
 
     public void generaCodiceMovimentazione() {
         int annoCorrente = LocalDate.now().getYear();
-
-        // Azzeramento del contatore se l'anno è cambiato
         if (annoCorrente != ultimoAnno) {
             contatoreProgressivo = 0;
             ultimoAnno = annoCorrente;
         }
-
-        contatoreProgressivo++; // Incrementa il contatore
-
-        String annoCifre = String.valueOf(annoCorrente).substring(2); // Ultime due cifre dell'anno
-        String numeroProgressivo = String.format("%06d", contatoreProgressivo); // Formatta a 6 cifre
-
-        this.codiceMovimentazione = "MV/" + annoCifre + "/" + numeroProgressivo; // Codice finale
+        contatoreProgressivo++;
+        String annoCifre = String.valueOf(annoCorrente).substring(2);
+        String numeroProgressivo = String.format("%06d", contatoreProgressivo);
+        this.codiceMovimentazione = "MV/" + annoCifre + "/" + numeroProgressivo;
     }
 
     public void validaUtilizzoMateriale() {
