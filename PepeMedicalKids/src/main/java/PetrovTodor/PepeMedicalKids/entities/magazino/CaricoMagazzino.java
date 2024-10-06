@@ -58,4 +58,14 @@ public class CaricoMagazzino {
 
         this.codiceCarico = "CA/" + annoCifre + "/" + numeroProgressivo;
     }
+
+    public void movimentaCarico() {
+        for (Articolo articolo : articoli) {
+            int quantitaAggiunta = articolo.getQuantita();
+            if (quantitaAggiunta <= 0) {
+                throw new IllegalArgumentException("La quantità da aggiungere deve essere maggiore di 0.");
+            }
+            articolo.aggiornaGiacenza(quantitaAggiunta);
+        }
+    }
 }

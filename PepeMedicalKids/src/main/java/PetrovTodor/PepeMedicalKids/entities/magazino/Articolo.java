@@ -72,12 +72,12 @@ public class Articolo {
 
     public void decrementaGiacenza(int quantitaUsata) {
         if (quantitaUsata <= 0) {
-            throw new IllegalArgumentException("Quantità usata deve essere maggiore di 0.");
+            throw new IllegalArgumentException("La quantità usata deve essere maggiore di 0.");
         }
         if (this.giacenza >= quantitaUsata) {
             this.giacenza -= quantitaUsata;
         } else {
-            throw new IllegalArgumentException("Quantità usata supera la giacenza disponibile.");
+            throw new IllegalStateException("Quantità usata supera la giacenza disponibile.");
         }
     }
 

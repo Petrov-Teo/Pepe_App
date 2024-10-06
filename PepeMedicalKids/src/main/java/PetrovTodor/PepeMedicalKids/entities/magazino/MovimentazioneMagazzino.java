@@ -51,7 +51,7 @@ public class MovimentazioneMagazzino {
     }
 
     // Costruttore per zone mediche
-    public MovimentazioneMagazzino(List<Articolo> articoli, LocalDate dataMovimentazione, ZonaUtilizzo zonaUtilizzo, Medico medico, Fornitore fornitore) {
+    public MovimentazioneMagazzino(List<Articolo> articoli, LocalDate dataMovimentazione, ZonaUtilizzo zonaUtilizzo, Medico medico) {
         this.articoli = articoli;
         this.dataMovimentazione = dataMovimentazione;
         this.zonaUtilizzo = zonaUtilizzo;
@@ -75,6 +75,16 @@ public class MovimentazioneMagazzino {
     public void validaUtilizzoMateriale() {
         if (zonaUtilizzo == ZonaUtilizzo.MEDICO && medico == null) {
             throw new IllegalArgumentException("Devi fornire un medico per la zona utilizzo 'MEDICO'.");
+        }
+    }
+
+    public void movimentaScarico() {
+        for (Articolo articolo : articoli) {
+            int quantitaUsata = articolo.getQuantita();
+            if (quantitaUsata <= 0) {
+                throw new IllegalArgumentException("La quantità da utilizzare deve essere maggiore di 0.");
+            }
+            articolo.decrementaGiacenza(quantitaUsata);
         }
     }
 }
