@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Entity
 @Getter
 @Setter
@@ -26,8 +23,12 @@ public class CertificatoMedico extends PrescrizioneMedica {
     @JoinColumn(name = "cartella_id")
     private CartellaMedica cartellaMedica;
 
-    public CertificatoMedico(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codCertificatoMedico, int giorniPrognosi) {
-        super(dataPrescrizione, ora, tipoPrescrizione, note);
+    public CertificatoMedico(
+            TipoPrescrizione tipoPrescrizione,
+            String note,
+            String codCertificatoMedico,
+            int giorniPrognosi) {
+        super(tipoPrescrizione, note);
         this.codCertificatoMedico = codCertificatoMedico;
         this.giorniPrognosi = giorniPrognosi;
     }

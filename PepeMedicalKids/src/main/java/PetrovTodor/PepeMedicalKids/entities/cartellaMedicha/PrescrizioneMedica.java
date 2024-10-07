@@ -2,9 +2,7 @@ package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,12 +26,13 @@ public abstract class PrescrizioneMedica {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")  // Formato ora HH:mm
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime oraPrescrizione;
+    @Enumerated(EnumType.STRING)
     private TipoPrescrizione tipoPrescrizione;
     private String note;
 
-    public PrescrizioneMedica(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note) {
-        this.dataPrescrizione = dataPrescrizione != null ? dataPrescrizione : LocalDate.now();
-        this.oraPrescrizione = ora != null ? ora : LocalTime.now();
+    public PrescrizioneMedica(TipoPrescrizione tipoPrescrizione, String note) {
+        this.dataPrescrizione = LocalDate.now();
+        this.oraPrescrizione = LocalTime.now();
         this.tipoPrescrizione = tipoPrescrizione;
         this.note = note;
     }

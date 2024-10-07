@@ -15,19 +15,17 @@ public class AdminService {
 
     public Admin creaNuovoAdmin(Admin admin) {
         String ultimoCodice = adminRepository.findMaxCodAdmin();
-        int codiceNumerico = 101;  // Codice base se nessun codice esiste
-
-        // Se esiste un ultimo codice, estrai la parte numerica e incrementala
+        int codiceNumerico = 101;
         if (ultimoCodice != null) {
             String parteNumerica = ultimoCodice.substring(1); // Rimuove la prima lettera (es: 'A101' -> '101')
             codiceNumerico = Integer.parseInt(parteNumerica) + 1;  // Incrementa la parte numerica
         }
 
-        // Genera il codice concatenato (es: 'A102')
+
         char primaLetteraRuolo = admin.getRuolo().name().charAt(0);
         String codiceConcatenato = primaLetteraRuolo + String.valueOf(codiceNumerico);
 
-        // Crea il nuovo admin
+
         Admin nuovoAdmin = new Admin(
                 admin.getCodiceFiscale(),
                 admin.getNome(),

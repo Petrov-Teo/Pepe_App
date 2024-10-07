@@ -45,4 +45,5 @@ public class CartellaMedica {
         this.medico = medico;
         this.paziente = paziente;
     }
+    //TODO da implementare cartella numero.
 }
