@@ -1,7 +1,7 @@
 package PetrovTodor.PepeMedicalKids.services;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
-import PetrovTodor.PepeMedicalKids.repositorys.AdminRepository;
+import PetrovTodor.PepeMedicalKids.repositorys.users.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
