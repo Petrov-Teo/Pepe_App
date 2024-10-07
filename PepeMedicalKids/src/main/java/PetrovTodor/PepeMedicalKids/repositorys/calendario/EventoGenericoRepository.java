@@ -27,7 +27,7 @@ public interface EventoGenericoRepository extends JpaRepository<EventoGenerico, 
 
     List<EventoGenerico> findAllByDataInizioAndOraInizio(LocalDate data, LocalTime oraInizio);
 
-    List<EventoGenerico> findAllBynote(String note);
+    List<EventoGenerico> findAllByNote(String note);
 
 
     List<EventoGenerico> findAllByVisitaPrenotabile_idTipoVisita(UUID idTipovisita);

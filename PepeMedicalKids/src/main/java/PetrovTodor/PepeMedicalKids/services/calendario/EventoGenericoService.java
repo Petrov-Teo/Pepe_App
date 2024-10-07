@@ -74,7 +74,7 @@ public class EventoGenericoService {
     }
 
     public String findByNoteEvento(String note) {
-        List<EventoGenerico> eventi = eventoGenericoRepository.findAllBynote(note);
+        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByNote(note);
         if (eventi.isEmpty()) {
             throw new NotFoundException("Nessun evento trovato con il nome: " + note);
         }
