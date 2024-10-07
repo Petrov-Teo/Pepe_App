@@ -1,7 +1,7 @@
 package PetrovTodor.PepeMedicalKids.controllers;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
-import PetrovTodor.PepeMedicalKids.services.AdminService;
+import PetrovTodor.PepeMedicalKids.services.users.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

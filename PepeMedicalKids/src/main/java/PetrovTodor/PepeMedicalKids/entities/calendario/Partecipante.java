@@ -19,8 +19,6 @@ public class Partecipante {
     private UUID idPartecipante;
     @Enumerated(EnumType.STRING)
     private TipoPartecipante tipo;
-
-
     private String email;
     private String nome;
 

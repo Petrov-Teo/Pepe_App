@@ -30,8 +30,16 @@ public class VisitaMedica extends EventoAbstr {
     @JoinColumn(name = "codPaziente")
     private Paziente paziente;
 
-    public VisitaMedica(LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note, VisitaPrenotabile visitaPrenotabile, Medico medico, Paziente paziente) {
-        super(dataInizio, oraInizio, oraFine, note);
+    public VisitaMedica(
+            String nome,
+            LocalDate dataInizio,
+            LocalTime oraInizio,
+            LocalTime oraFine,
+            String note,
+            VisitaPrenotabile visitaPrenotabile,
+            Medico medico,
+            Paziente paziente) {
+        super(nome, dataInizio, oraInizio, oraFine, note);
         this.visitaPrenotabile = visitaPrenotabile;
         this.medico = medico;
         this.paziente = paziente;

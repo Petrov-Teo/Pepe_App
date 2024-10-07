@@ -2,7 +2,7 @@ package PetrovTodor.PepeMedicalKids.security;
 
 
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
-import PetrovTodor.PepeMedicalKids.services.AdminService;
+import PetrovTodor.PepeMedicalKids.services.users.AdminService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;

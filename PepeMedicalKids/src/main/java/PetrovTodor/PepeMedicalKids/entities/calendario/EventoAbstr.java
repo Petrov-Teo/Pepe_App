@@ -23,13 +23,15 @@ public class EventoAbstr {
     private UUID idEvento;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private String nome;
     private LocalDate dataInizio;
     private LocalTime oraInizio;
     private LocalTime oraFine;
     private String note;
 
 
-    public EventoAbstr(LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note) {
+    public EventoAbstr(String nome, LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note) {
+        this.nome = nome;
         this.dataInizio = dataInizio;
         this.oraInizio = oraInizio;
         this.oraFine = oraFine;

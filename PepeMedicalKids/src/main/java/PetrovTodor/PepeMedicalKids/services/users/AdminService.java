@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.services;
+package PetrovTodor.PepeMedicalKids.services.users;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
 import PetrovTodor.PepeMedicalKids.repositorys.users.AdminRepository;

@@ -33,9 +33,8 @@ public class EventoGenerico extends EventoAbstr {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataFineRicorrenza;
-
-    public EventoGenerico(LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note, String luogo, VisitaPrenotabile visitaPrenotabile, List<Partecipante> partecipanti, boolean eventoRicorrente, TipoRicorrenza tipoRicorrenza, LocalDate dataFineRicorrenza) {
-        super(dataInizio, oraInizio, oraFine, note);
+    public EventoGenerico(String nome, LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note, String luogo, VisitaPrenotabile visitaPrenotabile, List<Partecipante> partecipanti, boolean eventoRicorrente, TipoRicorrenza tipoRicorrenza, LocalDate dataFineRicorrenza) {
+        super(nome, dataInizio, oraInizio, oraFine, note);
         this.luogo = luogo;
         this.visitaPrenotabile = visitaPrenotabile;
         this.partecipanti = partecipanti;
@@ -43,4 +42,6 @@ public class EventoGenerico extends EventoAbstr {
         this.tipoRicorrenza = tipoRicorrenza;
         this.dataFineRicorrenza = dataFineRicorrenza;
     }
+
+
 }
