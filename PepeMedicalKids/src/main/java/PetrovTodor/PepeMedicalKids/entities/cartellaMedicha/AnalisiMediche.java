@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -27,9 +25,11 @@ public class AnalisiMediche extends PrescrizioneMedica {
     private CartellaMedica cartellaMedica;
 
 
-    public AnalisiMediche(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codAnalisi, List<AnalisiRegionali> analisiRegionali) {
-        super(dataPrescrizione, ora, tipoPrescrizione, note);
-        this.codAnalisi = codAnalisi;
+    public AnalisiMediche(
+            TipoPrescrizione tipoPrescrizione,
+            String note,
+            List<AnalisiRegionali> analisiRegionali) {
+        super(tipoPrescrizione, note);
         this.analisiRegionali = analisiRegionali;
     }
 

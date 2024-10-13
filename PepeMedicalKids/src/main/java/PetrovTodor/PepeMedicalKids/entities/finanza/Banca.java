@@ -1,10 +1,8 @@
 package PetrovTodor.PepeMedicalKids.entities.finanza;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,8 +21,6 @@ public class Banca {
 
     private double importo;
     private String descrizione;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataTransazione;
     private boolean tipoOperazione; // true = Incasso, false = Pagamento
     @OneToMany(mappedBy = "idBanca", cascade = CascadeType.ALL)

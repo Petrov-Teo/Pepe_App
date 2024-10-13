@@ -1,10 +1,8 @@
 package PetrovTodor.PepeMedicalKids.entities.magazino;
 
 import PetrovTodor.PepeMedicalKids.enums.TipoArticolo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -30,9 +28,6 @@ public class Articolo {
     private int quantita;
     private int giacenza;
     private boolean liquido;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataScadenza;
 
     private double costoAcquisto;

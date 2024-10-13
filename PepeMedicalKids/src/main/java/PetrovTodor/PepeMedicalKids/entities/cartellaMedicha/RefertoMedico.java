@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Entity
 @Getter
 @Setter
@@ -28,8 +25,12 @@ public class RefertoMedico extends PrescrizioneMedica {
     private CartellaMedica cartellaMedica;
 
 
-    public RefertoMedico(LocalDate dataPrescrizione, LocalTime ora, TipoPrescrizione tipoPrescrizione, String note, String codRefertoMedico, String oggetto) {
-        super(dataPrescrizione, ora, tipoPrescrizione, note);
+    public RefertoMedico(
+            TipoPrescrizione tipoPrescrizione,
+            String note,
+            String codRefertoMedico,
+            String oggetto) {
+        super(tipoPrescrizione, note);
         this.codRefertoMedico = codRefertoMedico;
         this.oggetto = oggetto;
     }

@@ -12,6 +12,7 @@ import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,17 +24,49 @@ import java.util.List;
 @Table(name = "user_pazienti")
 public class Paziente extends User {
     @ManyToOne
-    public GenitoreTutore genitoreTutore;
+    private GenitoreTutore genitoreTutore;
+
     @Column(unique = true)
     private String codPaziente;
+
     private String note;
 
+    private boolean isMinorenne;
 
-    public Paziente(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, Ruolo ruolo, String email, String password, long numeroDiTelefono, GenitoreTutore genitoreTutore, String codPaziente, String note) {
-        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, ruolo);
-        this.genitoreTutore = genitoreTutore;
+    // COSTRUTTORE SE MAGGIORENNE
+    public Paziente(String codiceFiscale,
+                    String nome,
+                    String cognome,
+                    LocalDate dataDiNascita,
+                    String luogoDiNascita,
+                    String email,
+                    String password,
+                    String numeroDiTelefono,
+                    String note) {
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
+        this.setRuolo(Ruolo.PAZIENTE);
         this.codPaziente = codPaziente;
         this.note = note;
+    }
+
+    // COSTRUTTORE SE MINORENNE
+    public Paziente(String codiceFiscale,
+                    String nome,
+                    String cognome,
+                    LocalDate dataDiNascita,
+                    String luogoDiNascita,
+                    GenitoreTutore genitoreTutore,
+                    String note) {
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita);
+        this.isMinorenne = calcolaSeMinorenne();
+        this.setRuolo(Ruolo.PAZIENTE);
+        this.codPaziente = codPaziente;
+        this.genitoreTutore = genitoreTutore;
+        this.note = note;
+    }
+
+    public boolean calcolaSeMinorenne() {
+        return Period.between(this.getDataDiNascita(), LocalDate.now()).getYears() < 18;
     }
 
     public void generaCodice(String ultimoCodice) {
@@ -49,6 +82,6 @@ public class Paziente extends User {
 
     @Override
     public String getUsername() {
-        return "";
+        return this.getEmail();
     }
 }

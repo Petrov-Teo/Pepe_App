@@ -5,10 +5,8 @@ import PetrovTodor.PepeMedicalKids.entities.fatturazione.MastrinoCliente;
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
 import PetrovTodor.PepeMedicalKids.enums.ModalitàDiPagamento;
 import PetrovTodor.PepeMedicalKids.enums.StatoPagamento;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -30,8 +28,6 @@ public class IncassoFattura {
     private double importo;
     @ManyToOne
     private FatturaAttiva fatturaAttiva;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataPagamento;
     @Enumerated(EnumType.STRING)
     private ModalitàDiPagamento modalitàDiPagamento;

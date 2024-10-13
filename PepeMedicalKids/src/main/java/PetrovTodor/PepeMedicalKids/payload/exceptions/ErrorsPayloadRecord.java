@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.payload;
+package PetrovTodor.PepeMedicalKids.payload.exceptions;
 
 import java.time.LocalDateTime;
 

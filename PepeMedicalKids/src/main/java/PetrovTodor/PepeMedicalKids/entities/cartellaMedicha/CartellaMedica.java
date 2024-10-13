@@ -2,12 +2,11 @@ package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,17 +21,19 @@ public class CartellaMedica {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID idCartella;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Setter(AccessLevel.NONE)
+    private String numeroCartella;
     private LocalDate dataCreazione;
-
+    @ManyToMany
+    @JoinTable(
+            name = "medico_cartella",
+            joinColumns = @JoinColumn(name = "idCartella"),
+            inverseJoinColumns = @JoinColumn(name = "codMedico")
+    )
+    private List<Medico> medici;
     @ManyToOne
-    @JoinColumn(referencedColumnName = "codMedico", nullable = false)
-    private Medico medico;
-    @ManyToOne
-    @JoinColumn(name = "codPaziente", nullable = false)
+    @JoinColumn(name = "codPaziente", nullable = false, unique = true)
     private Paziente paziente;
-
     @OneToMany(mappedBy = "cartellaMedica", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnalisiMediche> prescrizioneAnalisi;
     @OneToMany(mappedBy = "cartellaMedica", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -40,9 +41,15 @@ public class CartellaMedica {
     @OneToMany(mappedBy = "cartellaMedica", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CertificatoMedico> prescrizioneCertificato;
 
-    public CartellaMedica(Medico medico, Paziente paziente) {
+    public CartellaMedica(Paziente paziente) {
         this.dataCreazione = LocalDate.now();
-        this.medico = medico;
         this.paziente = paziente;
+        this.medici = new ArrayList<>();
     }
+
+
+    public void creaNumeroCartella(String codicePaziente) {
+        this.numeroCartella = "CM/" + codicePaziente;
+    }
+
 }
