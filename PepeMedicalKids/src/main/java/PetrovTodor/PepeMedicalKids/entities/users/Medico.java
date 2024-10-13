@@ -39,17 +39,15 @@ public class Medico extends User {
                   String cognome,
                   LocalDate dataDiNascita,
                   String luogoDiNascita,
-                  Ruolo ruolo,
                   String email,
                   String password,
                   long numeroDiTelefono,
-                  String codMedico,
                   String specializzazione,
                   String iscrizioneAlboN) {
-        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, ruolo, email, password, numeroDiTelefono);
-        this.codMedico = codMedico;
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.specializzazione = specializzazione;
         this.iscrizioneAlboN = iscrizioneAlboN;
+        this.setRuolo(Ruolo.MEDICO);
     }
 
     public void generaCodice(String ultimoCodice) {
@@ -67,4 +65,6 @@ public class Medico extends User {
     public String getUsername() {
         return this.getEmail();
     }
+
+
 }

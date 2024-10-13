@@ -4,13 +4,11 @@ import PetrovTodor.PepeMedicalKids.entities.fatturazione.FatturaPassiva;
 import PetrovTodor.PepeMedicalKids.entities.fatturazione.MastrinoFornitore;
 import PetrovTodor.PepeMedicalKids.enums.ModalitàDiPagamento;
 import PetrovTodor.PepeMedicalKids.enums.StatoPagamento;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -32,8 +30,6 @@ public class PagamentoFornitore {
     private MastrinoFornitore mastrinoFornitore;
 
     private double importo;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataPagamento;
     @Enumerated(EnumType.STRING)
     private ModalitàDiPagamento modalitàDiPagamento;

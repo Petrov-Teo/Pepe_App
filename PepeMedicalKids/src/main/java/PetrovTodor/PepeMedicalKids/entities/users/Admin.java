@@ -29,19 +29,22 @@ public class Admin extends User {
                  String cognome,
                  LocalDate dataDiNascita,
                  String luogoDiNascita,
-                 Ruolo ruolo,
                  String email,
                  String password,
-                 long numeroDiTelefono,
-                 String codAdmin) {
-        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, ruolo, email, password, numeroDiTelefono);
-        this.codAdmin = codAdmin;
+                 long numeroDiTelefono
+    ) {
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
+        this.setRuolo(Ruolo.ADMIN);
     }
 
     public void generaCodice(String ultimoCodice) {
-        String primaLetteraRuolo = String.valueOf(this.getRuolo().name().charAt(0));
-        int codiceBase = 100;
-        this.codAdmin = primaLetteraRuolo + "/" + codiceBase + ultimoCodice;
+        int codiceNumerico = 101;
+        if (ultimoCodice != null) {
+            String parteNumerica = ultimoCodice.substring(1);
+            codiceNumerico = Integer.parseInt(parteNumerica) + 1;
+        }
+        char primaLetteraRuolo = this.getRuolo().name().charAt(0);
+        this.codAdmin = primaLetteraRuolo + String.valueOf(codiceNumerico);
     }
 
     @Override

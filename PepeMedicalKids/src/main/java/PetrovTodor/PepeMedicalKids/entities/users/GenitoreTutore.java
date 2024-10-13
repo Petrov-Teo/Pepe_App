@@ -1,6 +1,7 @@
 package PetrovTodor.PepeMedicalKids.entities.users;
 
 
+import PetrovTodor.PepeMedicalKids.enums.Ruolo;
 import PetrovTodor.PepeMedicalKids.enums.TipoTutore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,6 +30,25 @@ public class GenitoreTutore extends User {
     @OneToMany(mappedBy = "genitoreTutore")
     private List<Paziente> pazienti;
 
+    public GenitoreTutore(String codiceFiscale,
+                          String nome,
+                          String cognome,
+                          LocalDate dataDiNascita,
+                          String luogoDiNascita,
+                          String email,
+                          String password,
+                          long numeroDiTelefono,
+                          String codGenitore,
+                          String note,
+                          TipoTutore tipoTutore,
+                          List<Paziente> pazienti) {
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
+        this.codGenitore = codGenitore;
+        this.note = note;
+        this.tipoTutore = tipoTutore;
+        this.pazienti = pazienti;
+        this.setRuolo(Ruolo.GENITORE);
+    }
 
     public void generaCodice(String ultimoCodice) {
         String primaLetteraRuolo = String.valueOf(this.getRuolo().name().charAt(0));

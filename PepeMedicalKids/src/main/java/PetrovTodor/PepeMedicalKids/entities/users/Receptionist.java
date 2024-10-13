@@ -26,11 +26,12 @@ public class Receptionist extends User {
     private LocalDate dataTermine;
 
 
-    public Receptionist(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, Ruolo ruolo, String email, String password, long numeroDiTelefono, String codReceptionist, LocalDate dataAssunzione, LocalDate dataTermine) {
-        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, ruolo, email, password, numeroDiTelefono);
+    public Receptionist(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, String email, String password, long numeroDiTelefono, String codReceptionist, LocalDate dataAssunzione, LocalDate dataTermine) {
+        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.codReceptionist = codReceptionist;
         this.dataAssunzione = dataAssunzione;
         this.dataTermine = dataTermine;
+        this.setRuolo(Ruolo.RECEPTIONIST);
     }
 
     public void generaCodice(String ultimoCodice) {

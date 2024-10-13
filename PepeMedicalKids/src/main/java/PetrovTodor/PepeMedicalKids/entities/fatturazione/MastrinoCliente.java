@@ -2,6 +2,7 @@ package PetrovTodor.PepeMedicalKids.entities.fatturazione;
 
 import PetrovTodor.PepeMedicalKids.entities.finanza.IncassoFattura;
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
+import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,12 +23,18 @@ public class MastrinoCliente {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID idMastrinoCliente;
-
     @OneToOne
     private GenitoreTutore genitoreTutore;
 
+
+    @ManyToOne
+    @JoinColumn(name = "codPaziente", nullable = false)
+    private Paziente paziente;
+
+
     @ElementCollection
     private List<FatturaAttiva> fatture = new ArrayList<>();
+
 
     @ElementCollection
     private List<NotaCreditoCliente> notaCreditoCliente = new ArrayList<>();
@@ -36,18 +43,23 @@ public class MastrinoCliente {
     @ElementCollection
     private List<IncassoFattura> incassi = new ArrayList<>();
 
+
     private double saldoAttuale;
 
-    public MastrinoCliente(GenitoreTutore genitoreTutore) {
-        this.genitoreTutore = genitoreTutore;
+
+    public MastrinoCliente(GenitoreTutore genitoreTutore, Paziente paziente) {
+        this.genitoreTutore = genitoreTutore; // Può essere nullo per pazienti maggiorenni
+        this.paziente = paziente;
         this.saldoAttuale = 0.0; // Inizializza il saldo a zero
     }
+
 
     public void aggiungiFattura(FatturaAttiva fattura) {
         this.fatture.add(fattura);
         this.saldoAttuale += fattura.getTotaleFattura(); // Aggiorna il saldo
     }
 
+   
     public void aggiungiIncasso(IncassoFattura incasso) {
         this.incassi.add(incasso);
         this.saldoAttuale -= incasso.getImporto(); // Aggiorna il saldo

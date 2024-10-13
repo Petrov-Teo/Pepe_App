@@ -8,4 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface GenitoreTutoreRepository extends JpaRepository<GenitoreTutore, UUID> {
+
+    GenitoreTutore findGenitoreTutoreByCodGenitore(String codGenitore);
 }

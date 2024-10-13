@@ -2,10 +2,8 @@ package PetrovTodor.PepeMedicalKids.entities.fatturazione;
 
 import PetrovTodor.PepeMedicalKids.entities.magazino.Fornitore;
 import PetrovTodor.PepeMedicalKids.enums.StatoPagamento;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,13 +32,7 @@ public class FatturaPassiva {
     private double totaleFattura;
     private double importoRimanente;
     private StatoPagamento statoPagamento;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataFattura;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataPagamento;
 
     private String noteFattura;
