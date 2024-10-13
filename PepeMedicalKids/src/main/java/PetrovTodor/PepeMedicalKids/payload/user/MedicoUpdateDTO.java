@@ -3,7 +3,6 @@ package PetrovTodor.PepeMedicalKids.payload.user;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -23,9 +22,9 @@ public record MedicoUpdateDTO(
         @NotBlank(message = "Il Campo Luogo di Nascita è Obbligatorio!")
         String luogoDiNascita,
 
-        @NotNull(message = "Il Campo Numero di Telefono è Obbligatorio!")
+        @NotBlank(message = "Il Campo Numero di Telefono è Obbligatorio!")
         @Min(10) @Max(10)
-        long numeroDiTelefono,
+        String numeroDiTelefono,
 
         @NotBlank(message = "Il Campo Specializzazione è Obbligatorio!")
         String specializzazione,

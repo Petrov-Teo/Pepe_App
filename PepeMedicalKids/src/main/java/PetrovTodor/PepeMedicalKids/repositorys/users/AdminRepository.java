@@ -14,11 +14,13 @@ public interface AdminRepository extends JpaRepository<Admin, UUID> {
     @Query("SELECT MAX(a.codAdmin) FROM Admin a")
     String findMaxCodAdmin();
 
-    Optional<Admin> findAdminByCodAdmin(String codAdmin);
+    Optional<Admin> findByCodAdmin(String codAdmin);
 
-    Optional<Admin> findAdminByNome(String nome);
+    Optional<Admin> findByNome(String nome);
 
-    Optional<Admin> findAdminByCognome(String cognome);
+    Optional<Admin> findByCognome(String cognome);
 
-    Optional<Admin> findAdminByCodiceFiscale(String codiceFiscale);
+    Optional<Admin> findByCodiceFiscale(String codiceFiscale);
+
+    Optional<Admin> findByEmail(String email);
 }

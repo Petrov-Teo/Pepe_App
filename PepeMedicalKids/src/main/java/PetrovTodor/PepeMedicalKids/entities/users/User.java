@@ -27,11 +27,12 @@ public abstract class User implements UserDetails {
     private String luogoDiNascita;
     @Enumerated(EnumType.STRING)
     private Ruolo ruolo;
+    @Column(unique = true)
     private String email;
     private String password;
-    private long numeroDiTelefono;
+    private String numeroDiTelefono;
 
-    public User(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, String email, String password, long numeroDiTelefono) {
+    public User(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, String email, String password, String numeroDiTelefono) {
         this.codiceFiscale = codiceFiscale;
         this.nome = nome;
         this.cognome = cognome;

@@ -37,13 +37,11 @@ public class GenitoreTutore extends User {
                           String luogoDiNascita,
                           String email,
                           String password,
-                          long numeroDiTelefono,
-                          String codGenitore,
+                          String numeroDiTelefono,
                           String note,
                           TipoTutore tipoTutore,
                           List<Paziente> pazienti) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
-        this.codGenitore = codGenitore;
         this.note = note;
         this.tipoTutore = tipoTutore;
         this.pazienti = pazienti;

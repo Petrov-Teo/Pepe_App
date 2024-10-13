@@ -41,7 +41,7 @@ public class Medico extends User {
                   String luogoDiNascita,
                   String email,
                   String password,
-                  long numeroDiTelefono,
+                  String numeroDiTelefono,
                   String specializzazione,
                   String iscrizioneAlboN) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);

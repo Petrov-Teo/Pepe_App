@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.payload;
+package PetrovTodor.PepeMedicalKids.payload.calendar;
 
 import PetrovTodor.PepeMedicalKids.entities.calendario.Partecipante;
 import PetrovTodor.PepeMedicalKids.entities.serviziPrenotabili.VisitaPrenotabile;

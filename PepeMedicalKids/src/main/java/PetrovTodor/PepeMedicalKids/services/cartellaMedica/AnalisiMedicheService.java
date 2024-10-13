@@ -2,7 +2,7 @@ package PetrovTodor.PepeMedicalKids.services.cartellaMedica;
 
 import PetrovTodor.PepeMedicalKids.entities.cartellaMedicha.AnalisiMediche;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
-import PetrovTodor.PepeMedicalKids.payload.AnalisiMedicheDTO;
+import PetrovTodor.PepeMedicalKids.payload.cartellaMedica.AnalisiMedicheDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.cartellaMedica.AnalisiMedicheRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

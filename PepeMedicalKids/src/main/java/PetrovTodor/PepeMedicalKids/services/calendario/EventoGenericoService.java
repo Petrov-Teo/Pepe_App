@@ -2,7 +2,7 @@ package PetrovTodor.PepeMedicalKids.services.calendario;
 
 import PetrovTodor.PepeMedicalKids.entities.calendario.EventoGenerico;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
-import PetrovTodor.PepeMedicalKids.payload.EventoGenericoDTO;
+import PetrovTodor.PepeMedicalKids.payload.calendar.EventoGenericoDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.calendario.EventoGenericoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

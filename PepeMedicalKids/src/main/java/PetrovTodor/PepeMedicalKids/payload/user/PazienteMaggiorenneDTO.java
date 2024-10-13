@@ -19,9 +19,9 @@ public record PazienteMaggiorenneDTO(
         @NotBlank(message = "Il Campo e-mail è Obbligatorio!")
         String email,
         @NotBlank(message = "Il Campo Password è Obbligatorio!")
-        String Password,
-        @NotNull(message = "Il Campo Numero di Telefono è Obbligatorio!")
-        long numeroDiTelefono,
+        String password,
+        @NotBlank(message = "Il Campo Numero di Telefono è Obbligatorio!")
+        String numeroDiTelefono,
         String note,
         @NotNull(message = "Il Campo Minorenne S/N di Telefono è Obbligatorio!")
         boolean isMinorenne

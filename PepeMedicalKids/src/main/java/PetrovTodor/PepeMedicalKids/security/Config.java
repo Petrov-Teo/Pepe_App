@@ -22,21 +22,11 @@ import java.util.Arrays;
 public class Config {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.formLogin(http -> http.disable());
         httpSecurity.csrf(http -> http.disable());
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        // Permetti solo agli utenti autenticati di inviare messaggi
-        httpSecurity.authorizeHttpRequests(http ->
-                http.requestMatchers("/messaggi").authenticated() // Solo utenti autenticati possono accedere a questo endpoint
-                        .anyRequest().permitAll() // Permetti accesso a tutte le altre richieste
-        );
-
+        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").permitAll());
         httpSecurity.cors(Customizer.withDefaults());
         return httpSecurity.build();
     }
@@ -50,11 +40,13 @@ public class Config {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+
     }
 }

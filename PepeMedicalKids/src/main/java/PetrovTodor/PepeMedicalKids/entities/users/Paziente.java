@@ -41,7 +41,7 @@ public class Paziente extends User {
                     String luogoDiNascita,
                     String email,
                     String password,
-                    long numeroDiTelefono,
+                    String numeroDiTelefono,
                     String note) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.setRuolo(Ruolo.PAZIENTE);

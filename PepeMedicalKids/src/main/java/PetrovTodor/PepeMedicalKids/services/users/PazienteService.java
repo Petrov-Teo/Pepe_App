@@ -2,11 +2,15 @@ package PetrovTodor.PepeMedicalKids.services.users;
 
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
 import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
+import PetrovTodor.PepeMedicalKids.exceptions.EmailSendingException;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
 import PetrovTodor.PepeMedicalKids.payload.user.PazienteMaggiorenneDTO;
 import PetrovTodor.PepeMedicalKids.payload.user.PazienteMinorenneDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.users.PazienteRepository;
+import PetrovTodor.PepeMedicalKids.services.emeil.EmailService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,24 +20,51 @@ import java.util.UUID;
 public class PazienteService {
     @Autowired
     private PazienteRepository pazienteRepository;
-    @Autowired
+
     private GenitoreTutoreService genitoreTutoreService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
-    public Paziente savePazienteMaggiorenne(PazienteMaggiorenneDTO body) {
-        Paziente paziente = new Paziente(body.codiceFiscale(),
+    public Paziente savePazienteMaggiorenne(PazienteMaggiorenneDTO body) throws MessagingException {
+        Paziente paziente = new Paziente(
+                body.codiceFiscale(),
                 body.nome(),
                 body.cognome(),
                 body.dataDiNascita(),
                 body.luogoDiNascita(),
                 body.email(),
-                body.Password(),
+                passwordEncoder.encode(body.password()),
                 body.numeroDiTelefono(),
                 body.note());
-        if (paziente.isMinorenne() && paziente.getGenitoreTutore() == null) {
-            throw new IllegalArgumentException("Il paziente è minorenne e deve avere un genitore o tutore associato.");
+
+        String email = paziente.getEmail();
+        String oggetto = "Account Creato Correttamente!";
+        String htmlText = generateWelcomeEmailHtml(paziente);
+
+        try {
+            emailService.sendHtmlMessage(email, oggetto, htmlText);
+        } catch (MessagingException e) {
+
+            throw new EmailSendingException("Impossibile inviare l'email di benvenuto");
         }
+
         return this.pazienteRepository.save(paziente);
+    }
+
+    private String generateWelcomeEmailHtml(Paziente paziente) {
+        return "<html>"
+                + "<body>"
+                + "<h1 style='color: #4CAF50;'>Benvenuto su Pepe Medical Kids!</h1>"
+                + "<p>Ciao <b>" + paziente.getNome() + " " + paziente.getCognome() + "</b>,</p>"
+                + "<p>Grazie di esserti registrato. Siamo felici di averti con noi.</p>"
+                + "<p>Accedi al tuo account <a href='https://www.pepemedicalkids.com/login'>qui</a> e inizia a esplorare i nostri servizi!</p>"
+                + "<br><p>Ti aspettiamo presto!</p>"
+                + "<p>Il Team di Pepe Medical Kids</p>"
+                + "</body>"
+                + "</html>";
     }
 
     public Paziente savePazienteMinorenne(PazienteMinorenneDTO body) {
@@ -48,6 +79,17 @@ public class PazienteService {
         if (paziente.isMinorenne() && paziente.getGenitoreTutore() == null) {
             throw new IllegalArgumentException("Il paziente è minorenne e deve avere un genitore o tutore associato.");
         }
+        String email = paziente.getEmail();
+        String oggetto = "Account Creato Correttamente!";
+        String htmlText = generateWelcomeEmailHtml(paziente);
+
+        try {
+            emailService.sendHtmlMessage(email, oggetto, htmlText);
+        } catch (MessagingException e) {
+
+            throw new EmailSendingException("Impossibile inviare l'email di benvenuto");
+        }
+
         return this.pazienteRepository.save(paziente);
     }
 
@@ -83,7 +125,7 @@ public class PazienteService {
         found.setDataDiNascita(body.dataDiNascita());
         found.setLuogoDiNascita(body.luogoDiNascita());
         found.setEmail(body.email());
-        found.setPassword(body.Password());
+        found.setPassword(body.password());
         found.setNumeroDiTelefono(body.numeroDiTelefono());
         found.setNote(body.note());
 

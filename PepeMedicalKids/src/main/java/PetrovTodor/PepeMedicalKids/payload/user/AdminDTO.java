@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.payload;
+package PetrovTodor.PepeMedicalKids.payload.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +20,7 @@ public record AdminDTO(
         String email,
         @NotBlank(message = "Il Campo Password è Obbligatorio!")
         String password,
-        @NotNull(message = "Il Campo Numero di Telefono è Obbligatorio!")
-        long numeroDiTelefono
+        @NotBlank(message = "Il Campo Numero di Telefono è Obbligatorio!")
+        String numeroDiTelefono
 ) {
 }

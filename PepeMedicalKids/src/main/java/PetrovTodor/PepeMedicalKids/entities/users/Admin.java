@@ -31,7 +31,7 @@ public class Admin extends User {
                  String luogoDiNascita,
                  String email,
                  String password,
-                 long numeroDiTelefono
+                 String numeroDiTelefono
     ) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.setRuolo(Ruolo.ADMIN);

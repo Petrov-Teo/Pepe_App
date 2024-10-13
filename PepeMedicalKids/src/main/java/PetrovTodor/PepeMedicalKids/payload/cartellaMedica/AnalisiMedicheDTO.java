@@ -1,4 +1,4 @@
-package PetrovTodor.PepeMedicalKids.payload;
+package PetrovTodor.PepeMedicalKids.payload.cartellaMedica;
 
 import PetrovTodor.PepeMedicalKids.entities.cartellaMedicha.AnalisiRegionali;
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;

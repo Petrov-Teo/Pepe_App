@@ -1,7 +1,7 @@
 package PetrovTodor.PepeMedicalKids.exceptions;
 
 
-import PetrovTodor.PepeMedicalKids.payload.ErrorsPayloadRecord;
+import PetrovTodor.PepeMedicalKids.payload.exceptions.ErrorsPayloadRecord;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +21,12 @@ public class ExceptionsHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)//Err 404
     public ErrorsPayloadRecord handleNotFound(NotFoundException ex) {
+        return new ErrorsPayloadRecord(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(EmailSendingException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)//Err 404
+    public ErrorsPayloadRecord handleEmailException(EmailSendingException ex) {
         return new ErrorsPayloadRecord(ex.getMessage(), LocalDateTime.now());
     }
 
