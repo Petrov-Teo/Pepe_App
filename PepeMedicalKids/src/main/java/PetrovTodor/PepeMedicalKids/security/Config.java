@@ -1,5 +1,6 @@
 package PetrovTodor.PepeMedicalKids.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -21,6 +22,9 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class Config {
 
+    @Value("${FRONTEND_URL}")
+    private String frontendUrl;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.formLogin(http -> http.disable());
@@ -28,25 +32,26 @@ public class Config {
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/**").permitAll());
         httpSecurity.cors(Customizer.withDefaults());
+        httpSecurity.cors(Customizer.withDefaults());
         return httpSecurity.build();
-    }
-
-    @Bean
-    PasswordEncoder getBCript() {
-        return new BCryptPasswordEncoder(11);
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList(frontendUrl));
+        configuration.setAllowedMethods(Arrays.asList(""));
+        configuration.setAllowedHeaders(Arrays.asList(""));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-
     }
+
+
+    @Bean
+    PasswordEncoder getBCript() {
+        return new BCryptPasswordEncoder(11);
+    }
+    
 }

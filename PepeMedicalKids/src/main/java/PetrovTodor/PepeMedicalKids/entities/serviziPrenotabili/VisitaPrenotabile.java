@@ -4,7 +4,6 @@ import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,19 +19,21 @@ public class VisitaPrenotabile {
     private UUID idTipoVisita;
     private String tipo;
     private String descrizione;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "calendario_visita_medico",
-            joinColumns = @JoinColumn(name = "visita_id"),
-            inverseJoinColumns = @JoinColumn(name = "medico_id")
-    )
-    private List<Medico> medici; // più medici che fanno lo stesso tipo di visita
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "medico_id")
+    private Medico medico; // più medici che fanno lo stesso tipo di visita
+
     private double prezzo;
 
-    public VisitaPrenotabile(String tipo, String descrizione, List<Medico> medici, double prezzo) {
+    public VisitaPrenotabile(
+            String tipo,
+            String descrizione,
+            Medico medico,
+            double prezzo
+    ) {
         this.tipo = tipo;
         this.descrizione = descrizione;
-        this.medici = medici;
+        this.medico = medico;
         this.prezzo = prezzo;
     }
 }

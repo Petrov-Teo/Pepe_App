@@ -26,11 +26,17 @@ public class Receptionist extends User {
     private LocalDate dataTermine;
 
 
-    public Receptionist(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, String email, String password, String numeroDiTelefono, String codReceptionist, LocalDate dataAssunzione, LocalDate dataTermine) {
-        super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
-        this.codReceptionist = codReceptionist;
-        this.dataAssunzione = dataAssunzione;
-        this.dataTermine = dataTermine;
+    public Receptionist(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, String email, String password, String numeroDiTelefono) {
+        super(
+                codiceFiscale,
+                nome,
+                cognome,
+                dataDiNascita,
+                luogoDiNascita,
+                email,
+                password,
+                numeroDiTelefono);
+        this.dataAssunzione = LocalDate.now();
         this.setRuolo(Ruolo.RECEPTIONIST);
     }
 

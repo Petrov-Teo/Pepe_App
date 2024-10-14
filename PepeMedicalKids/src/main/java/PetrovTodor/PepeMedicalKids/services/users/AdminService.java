@@ -150,8 +150,8 @@ public class AdminService {
         Admin found = findById(idAdmin);
         this.adminRepository.delete(found);
     }
-    // RESET PASSWORD
 
+    // RESET PASSWORD
     public Admin resetPassword(UUID idAdmin, PasswordResetDTO passwordResetDTO) {
         Admin foundAdmin = findById(idAdmin);
 

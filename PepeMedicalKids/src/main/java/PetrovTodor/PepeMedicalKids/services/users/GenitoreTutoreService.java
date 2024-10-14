@@ -2,8 +2,11 @@ package PetrovTodor.PepeMedicalKids.services.users;
 
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
 import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
+import PetrovTodor.PepeMedicalKids.exceptions.EmailSendingException;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
 import PetrovTodor.PepeMedicalKids.payload.user.GenitoreTutoreDTO;
+import PetrovTodor.PepeMedicalKids.payload.user.PasswordResetDTO;
+import PetrovTodor.PepeMedicalKids.payload.user.PasswordResetMailDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.users.GenitoreTutoreRepository;
 import PetrovTodor.PepeMedicalKids.services.emeil.EmailService;
 import jakarta.mail.MessagingException;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -30,7 +34,7 @@ public class GenitoreTutoreService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-   
+
     private PazienteService pazienteService;
 
 
@@ -152,6 +156,63 @@ public class GenitoreTutoreService {
 
     }
 
-//TODO: DA IMPLEMENTARE update and delete ;
+    // RESET PASSWORD
+    public GenitoreTutore resetPassword(UUID idGeniotre, PasswordResetDTO passwordResetDTO) {
+        GenitoreTutore foundGeniotre = findById(idGeniotre);
 
+        if (!passwordEncoder.matches(passwordResetDTO.oldPassword(), foundGeniotre.getPassword())) {
+            throw new IllegalArgumentException("La vecchia password non è corretta!");
+        }
+
+        String hashedNewPassword = passwordEncoder.encode(passwordResetDTO.newPassword());
+        foundGeniotre.setPassword(hashedNewPassword);
+
+        String subject = "Cambio Password";
+        String text = "La tua password è stata cambiata con successo!";
+
+        GenitoreTutore updatedAdmin = this.genitoreTutoreRepository.save(foundGeniotre);
+
+        emailService.sendSimpleMessage(foundGeniotre.getEmail(), subject, text);
+
+        return updatedAdmin;
+    }
+
+    //RESET PASSWORD CON EMEIL
+    public GenitoreTutore resetPasswordConMail(PasswordResetMailDTO passwordResetMailDTO) {
+        GenitoreTutore foundGenitore = genitoreTutoreRepository.findByEmail(passwordResetMailDTO.email())
+                .orElseThrow(() -> new NotFoundException("Nessun Genitore-Tutore trovato con l'email: " + passwordResetMailDTO.email()));
+
+        String temporaryPassword = generateTemporaryPassword();
+
+        foundGenitore.setPassword(passwordEncoder.encode(temporaryPassword));
+        genitoreTutoreRepository.save(foundGenitore);
+
+        String subject = "Reset Password";
+        String text = "La tua password provvisoria è: " + temporaryPassword +
+                "\n\nTi invitiamo a cambiarla al tuo prossimo accesso.";
+
+        try {
+            emailService.sendSimpleMessage(foundGenitore.getEmail(), subject, text);
+            System.out.println(("Email di reset password inviata a {}" + foundGenitore.getEmail()));
+        } catch (EmailSendingException e) {
+            throw new EmailSendingException("Impossibile inviare l'email con la password provvisoria.");
+        }
+
+        return foundGenitore;
+    }
+
+    private String generateTemporaryPassword() {
+
+        int length = 10;
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        StringBuilder password = new StringBuilder();
+        Random rnd = new Random();
+
+        for (int i = 0; i < length; i++) {
+            password.append(characters.charAt(rnd.nextInt(characters.length())));
+        }
+
+        return password.toString();
+    }
+    
 }

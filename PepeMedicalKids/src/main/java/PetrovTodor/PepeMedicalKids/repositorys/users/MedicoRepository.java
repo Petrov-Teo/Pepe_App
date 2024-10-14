@@ -14,11 +14,13 @@ public interface MedicoRepository extends JpaRepository<Medico, UUID> {
     String findMaxCodMedico();
 
 
-    Optional<Medico> findMedicoByNome(String nome);
+    Optional<Medico> findByNome(String nome);
 
-    Optional<Medico> findMedicoByCognome(String cognome);
+    Optional<Medico> findByCognome(String cognome);
 
-    Optional<Medico> findMedicoByCodMedico(String codMedico);
+    Optional<Medico> findByCodMedico(String codMedico);
 
-    Optional<Medico> findMedicoByCodiceFiscale(String codFiscale);
+    Optional<Medico> findByCodiceFiscale(String codFiscale);
+
+    Optional<Medico> findByEmail(String email);
 }
