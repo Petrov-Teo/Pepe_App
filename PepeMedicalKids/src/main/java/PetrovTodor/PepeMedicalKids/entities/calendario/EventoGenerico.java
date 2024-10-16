@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Table(name = "calendario_eventi_generici")
-public class EventoGenerico extends EventoAbstr {
+public class EventoGenerico extends EventoAbstract {
 
     private String luogo;
     @ManyToOne()
