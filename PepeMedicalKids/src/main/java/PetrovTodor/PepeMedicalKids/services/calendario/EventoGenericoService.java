@@ -5,6 +5,10 @@ import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
 import PetrovTodor.PepeMedicalKids.payload.calendar.EventoGenericoDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.calendario.EventoGenericoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +23,12 @@ public class EventoGenericoService {
 
 
     //CRUD
+
+
+    public Page<EventoGenerico> findAll(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.eventoGenericoRepository.findAll(pageable);
+    }
 
     public EventoGenerico findById(UUID idEvento) {
         return eventoGenericoRepository.findById(idEvento)
@@ -65,7 +75,7 @@ public class EventoGenericoService {
 
     }
 
-    public String findBynomeEvento(String nomeEvento) {
+    public String findByNomeEvento(String nomeEvento) {
         List<EventoGenerico> eventi = eventoGenericoRepository.findAllByNome(nomeEvento);
         if (eventi.isEmpty()) {
             throw new NotFoundException("Nessun evento trovato con il nome: " + nomeEvento);

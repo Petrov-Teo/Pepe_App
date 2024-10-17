@@ -1,9 +1,11 @@
 package PetrovTodor.PepeMedicalKids.services.cartellaMedica;
 
 import PetrovTodor.PepeMedicalKids.entities.cartellaMedicha.AnalisiMediche;
+import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
 import PetrovTodor.PepeMedicalKids.payload.cartellaMedica.AnalisiMedicheDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.cartellaMedica.AnalisiMedicheRepository;
+import PetrovTodor.PepeMedicalKids.services.users.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +16,15 @@ import java.util.UUID;
 public class AnalisiMedicheService {
     @Autowired
     private AnalisiMedicheRepository analisiMedicheRepository;
-
+    @Autowired
+    private MedicoService medicoService;
 
     //CRUD
 
 
     public Optional<AnalisiMediche> findByCodAnalisi(String codAnalisi) {
         Optional<AnalisiMediche> analisiMedicheTrovate = this.analisiMedicheRepository.
-                findAnalisiMedicheByCodAnalisi(codAnalisi);
+                findByCodAnalisi(codAnalisi);
         if (analisiMedicheTrovate.isEmpty()) {
             throw new NotFoundException("Analisi" + codAnalisi + " non trovati!");
         }
@@ -34,7 +37,8 @@ public class AnalisiMedicheService {
     }
 
     public AnalisiMediche save(AnalisiMedicheDTO body) {
-        String ultimoCodice = analisiMedicheRepository.findMaxCodAdmin();
+        Medico medico = this.medicoService.findMedicoByCodMedico(body.medicoAutore());
+        String ultimoCodice = analisiMedicheRepository.findMaxCodAnalisi();
 
         if (ultimoCodice != null) {
             String parteNumerica = ultimoCodice.substring(1);
@@ -44,16 +48,20 @@ public class AnalisiMedicheService {
         AnalisiMediche analisiMediche = new AnalisiMediche(
                 body.tipoPrescrizione(),
                 body.note(),
-                body.analisiRegionali());
-        analisiMediche.setNumCertificato(ultimoCodice);
+                body.analisiRegionali(),
+                medico);
+        analisiMediche.generaCodiceAnalisiMediche(ultimoCodice);
         return this.analisiMedicheRepository.save(analisiMediche);
     }
 
     public AnalisiMediche findAndUpdate(UUID idAnalisiMediche, AnalisiMedicheDTO body) {
+        Medico medico = this.medicoService.findMedicoByCodMedico(body.medicoAutore());
+
         AnalisiMediche found = findById(idAnalisiMediche);
         found.setTipoPrescrizione(body.tipoPrescrizione());
         found.setNote(body.note());
         found.setAnalisiRegionali(body.analisiRegionali());
+        found.setMedicoAutore(medico);
         return this.analisiMedicheRepository.save(found);
     }
 

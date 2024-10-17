@@ -3,7 +3,9 @@ package PetrovTodor.PepeMedicalKids.exceptions;
 
 import PetrovTodor.PepeMedicalKids.payload.exceptions.ErrorsPayloadRecord;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,5 +50,13 @@ public class ExceptionsHandler {
         ex.printStackTrace();// Serve per catturare tutti gli errori e stamparli nella console
         return new ErrorsPayloadRecord(ex.getMessage(), LocalDateTime.now());
     }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<String> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body("Metodo di richiesta non supportato: " + ex.getMessage());
+    }
+    
 
 }

@@ -5,7 +5,6 @@ import PetrovTodor.PepeMedicalKids.entities.users.Admin;
 import PetrovTodor.PepeMedicalKids.services.users.AdminService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +28,34 @@ public class JWTChekFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        //E' il metodo che verrà richiamato per ogni richiesta, tranne quelle che escludiamo
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
-            throw new UnavailableException("Si prega di inserire il token nell'Authorization Header!");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String accessToken = authHeader.replace("Bearer ", "");
 
-        jwtTools.verifyToken(accessToken);
-        String id = jwtTools.extractDipendenteFromToken(accessToken);
-        Optional<Admin> userAttuale = Optional.ofNullable(this.userService.findById(UUID.fromString(id)));
+        try {
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userAttuale, null, userAttuale.get().getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);// <-- associo l'utente autenticato al Context
+            jwtTools.verifyToken(accessToken);
+
+
+            String id = jwtTools.extractDipendenteFromToken(accessToken);
+            Optional<Admin> userAttuale = Optional.ofNullable(this.userService.findById(UUID.fromString(id)));
+
+            if (userAttuale.isPresent()) {
+                Admin user = userAttuale.get();
+
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServletException("Token non valido");
+        }
 
         filterChain.doFilter(request, response);
-
     }
 
     @Override

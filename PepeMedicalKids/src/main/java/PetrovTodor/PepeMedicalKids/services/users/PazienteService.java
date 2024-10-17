@@ -10,6 +10,10 @@ import PetrovTodor.PepeMedicalKids.repositorys.users.PazienteRepository;
 import PetrovTodor.PepeMedicalKids.services.emeil.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +31,17 @@ public class PazienteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //FIND ALL
+    public Page<Paziente> findAll(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.pazienteRepository.findAll(pageable);
+    }
 
+
+    // SAVE MAGGIORENNE
     public Paziente savePazienteMaggiorenne(PazienteMaggiorenneDTO body) throws MessagingException {
+        String ultimoCodice = pazienteRepository.findMaxPaziente();
+
         Paziente paziente = new Paziente(
                 body.codiceFiscale(),
                 body.nome(),
@@ -39,6 +52,9 @@ public class PazienteService {
                 passwordEncoder.encode(body.password()),
                 body.numeroDiTelefono(),
                 body.note());
+        paziente.generaCodice(ultimoCodice);
+
+        Paziente savedPaziente = pazienteRepository.save(paziente);
 
         String email = paziente.getEmail();
         String oggetto = "Account Creato Correttamente!";
@@ -51,7 +67,7 @@ public class PazienteService {
             throw new EmailSendingException("Impossibile inviare l'email di benvenuto");
         }
 
-        return this.pazienteRepository.save(paziente);
+        return this.pazienteRepository.save(savedPaziente);
     }
 
     private String generateWelcomeEmailHtml(Paziente paziente) {
@@ -67,6 +83,7 @@ public class PazienteService {
                 + "</html>";
     }
 
+    // SAVE MINORENNE
     public Paziente savePazienteMinorenne(PazienteMinorenneDTO body) {
         GenitoreTutore genitoreTutore = this.genitoreTutoreService.findByCodGenitore(String.valueOf(body.genitoreTutore()));
         Paziente paziente = new Paziente(body.codiceFiscale(),
@@ -93,16 +110,19 @@ public class PazienteService {
         return this.pazienteRepository.save(paziente);
     }
 
+    //FIND BY ID
     public Paziente findPazienteByID(UUID idPaziente) {
         return this.pazienteRepository.findById(idPaziente).
                 orElseThrow(() -> new NotFoundException("Il Paziente con id: " + idPaziente + " non trovato!"));
     }
 
+    //FIND BY COD_PAZIENTE
     public Paziente findPazienteByCodPaziente(String codPaziente) {
         return this.pazienteRepository.findPazienteByCodPaziente(codPaziente).
                 orElseThrow(() -> new NotFoundException("Il Paziente con id: " + codPaziente + " non trovato!"));
     }
 
+    //FIND AND UPDITE MINORENNE
     public Paziente findAndUpdateMinorenne(String codPaziente, PazienteMinorenneDTO body) {
         GenitoreTutore genitoreTutore = this.genitoreTutoreService.findByCodGenitore(String.valueOf(body.genitoreTutore()));
         Paziente found = findPazienteByCodPaziente(codPaziente);
@@ -117,6 +137,7 @@ public class PazienteService {
         return this.pazienteRepository.save(found);
     }
 
+    //FIND AND UPDITE MAGGIORENNE
     public Paziente findAndUpdateMaggiorenne(String codPaziente, PazienteMaggiorenneDTO body) {
         Paziente found = findPazienteByCodPaziente(codPaziente);
         found.setCodiceFiscale(body.codiceFiscale());
@@ -132,11 +153,13 @@ public class PazienteService {
         return this.pazienteRepository.save(found);
     }
 
+    //FIND AND DELETE
     public void findAndDelete(UUID idPaziente) {
         Paziente found = findPazienteByID(idPaziente);
         this.pazienteRepository.delete(found);
     }
 
+    //FIND BY NAME
     public List<Paziente> findByNome(String nome) {
         List<Paziente> founds = this.pazienteRepository.findPazienteByNome(nome);
         if (founds.isEmpty()) {
@@ -145,6 +168,7 @@ public class PazienteService {
         return founds;
     }
 
+    //FIND BY COGNOME
     public List<Paziente> findByCognome(String cognome) {
         List<Paziente> founds = this.pazienteRepository.findPazienteByCognome(cognome);
         if (founds.isEmpty()) {
@@ -153,10 +177,16 @@ public class PazienteService {
         return founds;
     }
 
+    //FIND BY CODICE FISCALE
     public Paziente findByCodiceFiscale(String codiceFiscale) {
-        Paziente found = this.pazienteRepository.findByCodiceFiscale(codiceFiscale)
+        return this.pazienteRepository.findByCodiceFiscale(codiceFiscale)
                 .orElseThrow(() -> new NotFoundException("Nessun Paziente trovato con seguente Codice Fiscale: " + codiceFiscale + "!"));
-        return found;
+    }
+
+    //FIND BY EMAIL
+    public Paziente findByEmail(String email) {
+        return this.pazienteRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Nessun Paziente trovato con la seguente email: " + email + "!"));
     }
 
 

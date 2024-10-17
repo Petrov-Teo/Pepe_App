@@ -1,5 +1,6 @@
 package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
+import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,18 +25,24 @@ public class AnalisiMediche extends PrescrizioneMedica {
     @JoinColumn(name = "cartella_id")
     private CartellaMedica cartellaMedica;
 
+    @ManyToOne
+    @JoinColumn(name = "medico_id", nullable = false) // Medico che ha scritto il referto
+    private Medico medicoAutore;
+
 
     public AnalisiMediche(
             TipoPrescrizione tipoPrescrizione,
             String note,
-            List<AnalisiRegionali> analisiRegionali) {
+            List<AnalisiRegionali> analisiRegionali,
+            Medico medicoAutore) {
         super(tipoPrescrizione, note);
         this.analisiRegionali = analisiRegionali;
+        this.medicoAutore = medicoAutore;
     }
 
-    public void setNumCertificato(String ultimoNumero) {
+    public void generaCodiceAnalisiMediche(String ultimoNumero) {
         String primaLetteraRuolo = String.valueOf(this.getTipoPrescrizione().name().charAt(0));
         int numeroPartenza = 0;
-        this.codAnalisi = primaLetteraRuolo + "/" + numeroPartenza + ultimoNumero;//Da creare query per la ricerca dell'ultimo codice
+        this.codAnalisi = primaLetteraRuolo + "/" + numeroPartenza + ultimoNumero;
     }
 }

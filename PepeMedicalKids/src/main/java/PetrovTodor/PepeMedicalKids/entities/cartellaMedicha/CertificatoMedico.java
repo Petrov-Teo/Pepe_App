@@ -1,5 +1,6 @@
 package PetrovTodor.PepeMedicalKids.entities.cartellaMedicha;
 
+import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.enums.TipoPrescrizione;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -22,20 +23,25 @@ public class CertificatoMedico extends PrescrizioneMedica {
     @ManyToOne
     @JoinColumn(name = "cartella_id")
     private CartellaMedica cartellaMedica;
+    @ManyToOne
+    @JoinColumn(name = "medico_id", nullable = false) // Medico che ha scritto il referto
+    private Medico medicoAutore;
+
 
     public CertificatoMedico(
             TipoPrescrizione tipoPrescrizione,
             String note,
-            String codCertificatoMedico,
-            int giorniPrognosi) {
+            int giorniPrognosi,
+            Medico medicoAutore) {
         super(tipoPrescrizione, note);
-        this.codCertificatoMedico = codCertificatoMedico;
         this.giorniPrognosi = giorniPrognosi;
+        this.medicoAutore = medicoAutore;
     }
 
-    public void setNumCertificato(String ultimoNumero) {
+    public void generaCodiceCertificatoMedico(String ultimoNumero) {
         String primaLetteraRuolo = String.valueOf(this.getTipoPrescrizione().name().charAt(0));
         int numeroPartenza = 0;
-        this.codCertificatoMedico = primaLetteraRuolo + "/" + numeroPartenza + ultimoNumero;//Da creare query per la ricerca dell'ultimo codice
+        this.codCertificatoMedico = primaLetteraRuolo + "/" + numeroPartenza + ultimoNumero;
     }
+
 }
