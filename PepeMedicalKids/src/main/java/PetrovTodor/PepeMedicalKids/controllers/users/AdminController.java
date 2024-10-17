@@ -25,7 +25,7 @@ public class AdminController {
 
     //FIND ALL
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority(, 'ADMIN')")
     public Page<Admin> findAll(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "10") int size,
                                @RequestParam(defaultValue = "codAdmin") String sorteBy) {
@@ -33,9 +33,21 @@ public class AdminController {
         return adminService.findAll(page, size, sorteBy);
     }
 
+    // FIND ME
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyAuthority( 'ADMIN')")
+    public Admin findMe(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new IllegalArgumentException("L'utente non è autenticato!");
+        }
+        String username = userDetails.getUsername();
+        Admin admin = adminService.findByEmail(username);
+        return admin;
+    }
+
     // SAVE ADMIN
     @PostMapping("/register/admins")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Admin save(@RequestBody AdminDTO admin, BindingResult validationResult,
                       @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
         return this.adminService.saveAdmin(admin);

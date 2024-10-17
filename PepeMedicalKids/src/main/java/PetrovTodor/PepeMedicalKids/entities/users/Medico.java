@@ -27,11 +27,13 @@ public class Medico extends User {
     private String codMedico;
     private String specializzazione;
     private String iscrizioneAlboN;
+    private boolean passwordTemporanea;
 
     public Medico(String codMedico, String specializzazione, String iscrizioneAlboN) {
         this.codMedico = codMedico;
         this.specializzazione = specializzazione;
         this.iscrizioneAlboN = iscrizioneAlboN;
+
     }
 
     public Medico(String codiceFiscale,
@@ -43,7 +45,8 @@ public class Medico extends User {
                   String password,
                   String numeroDiTelefono,
                   String specializzazione,
-                  String iscrizioneAlboN) {
+                  String iscrizioneAlboN
+    ) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.specializzazione = specializzazione;
         this.iscrizioneAlboN = iscrizioneAlboN;

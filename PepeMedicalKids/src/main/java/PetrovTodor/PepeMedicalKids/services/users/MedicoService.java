@@ -80,10 +80,10 @@ public class MedicoService {
                         -> new NotFoundException("Nessun Medico trovato con la seguente Email : " + email + "!"));
     }
 
-    //SAVE
+    // SAVE
     public Medico save(MedicoDTO body) {
         String ultimoCodice = this.medicoRepository.findMaxCodMedico();
-
+        String password = generateTemporaryPassword(); // Genera la password temporanea
         Medico medico = new Medico(
                 body.codiceFiscale(),
                 body.nome(),
@@ -91,16 +91,18 @@ public class MedicoService {
                 body.dataDiNascita(),
                 body.luogoDiNascita(),
                 body.email(),
-                passwordEncoder.encode(body.password()),
+                passwordEncoder.encode(password),
                 body.numeroDiTelefono(),
                 body.specializzazione(),
                 body.iscrizioneAlboN());
+
+        medico.setPasswordTemporanea(true);
         medico.setCodMedico(ultimoCodice);
         Medico savedMedico = medicoRepository.save(medico);
 
         String email = body.email();
         String oggetto = "Account Creato Correttamente!";
-        String htmlText = generateWelcomeEmailHtml(body);
+        String htmlText = generateWelcomeEmailHtml(body, password); // Passa la password alla funzione
 
         try {
             emailService.sendHtmlMessage(email, oggetto, htmlText);
@@ -109,15 +111,15 @@ public class MedicoService {
         }
 
         return savedMedico;
-
     }
 
-    private String generateWelcomeEmailHtml(MedicoDTO admin) {
+    private String generateWelcomeEmailHtml(MedicoDTO admin, String temporaryPassword) { // Aggiungi un parametro per la password
         return "<html>"
                 + "<body>"
                 + "<h1 style='color: #4CAF50;'>Benvenuto su Pepe Medical Kids!</h1>"
                 + "<p>Ciao <b>" + admin.nome() + " " + admin.cognome() + "</b>,</p>"
                 + "<p>Grazie di esserti registrato. Siamo felici di averti con noi.</p>"
+                + "<p>La tua password temporanea è: <b>" + temporaryPassword + "</b></p>" // Aggiungi la password temporanea
                 + "<p>Accedi al tuo account <a href='https://www.pepemedicalkids.com/login'>qui</a> e inizia a esplorare i nostri servizi!</p>"
                 + "<br><p>Ti aspettiamo presto!</p>"
                 + "<p>Il Team di Pepe Medical Kids</p>"
@@ -159,7 +161,7 @@ public class MedicoService {
 
         String subject = "Cambio Password";
         String text = "La tua password è stata cambiata con successo!";
-
+        foundMedico.setPasswordTemporanea(false);
         Medico updatedMedico = this.medicoRepository.save(foundMedico);
 
         emailService.sendSimpleMessage(foundMedico.getEmail(), subject, text);
@@ -175,6 +177,7 @@ public class MedicoService {
         String temporaryPassword = generateTemporaryPassword();
 
         foundMedico.setPassword(passwordEncoder.encode(temporaryPassword));
+        foundMedico.setPasswordTemporanea(true);
         medicoRepository.save(foundMedico);
 
         String subject = "Reset Password";

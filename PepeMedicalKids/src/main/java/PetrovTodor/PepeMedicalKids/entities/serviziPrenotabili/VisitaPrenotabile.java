@@ -21,7 +21,7 @@ public class VisitaPrenotabile {
     private String descrizione;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "medico_id")
-    private Medico medico; // più medici che fanno lo stesso tipo di visita
+    private Medico medico;
 
     private double prezzo;
 

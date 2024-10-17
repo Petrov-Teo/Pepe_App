@@ -40,8 +40,8 @@ public class Config {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(frontendUrl));
-        configuration.setAllowedMethods(Arrays.asList(""));
-        configuration.setAllowedHeaders(Arrays.asList(""));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -53,5 +53,5 @@ public class Config {
     PasswordEncoder getBCript() {
         return new BCryptPasswordEncoder(11);
     }
-    
+
 }
