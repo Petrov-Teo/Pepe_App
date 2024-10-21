@@ -80,9 +80,9 @@ public class MedicoController {
     }
 
     // RESET PASSWORD
-    @PostMapping("/{id}/reset-password")
+    @PostMapping("/reset-password/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('MEDICO')")
+    @PreAuthorize("hasAnyAuthority( 'MEDICO','ADMIN')")
     public Medico resetPassword(@PathVariable UUID id, @RequestBody PasswordResetDTO passwordResetDTO) throws BadRequestException {
         return this.medicoService.resetPassword(id, passwordResetDTO);
 

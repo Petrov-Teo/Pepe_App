@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,17 +27,17 @@ public class CalendarioController {
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public Page<EventoGenerico> findAll(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size,
-                                        @RequestParam(defaultValue = "codAdmin") String sorteBy) {
+                                        @RequestParam(defaultValue = "idEvento") String sorteBy) {
 
         return eventoGenericoService.findAll(page, size, sorteBy);
     }
 
     //POST NEW
-    @PostMapping("/nuovo-evento-generico")
+    @PostMapping("/nuovoEventoGenerico")
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
-    public EventoGenerico nuvoEvento(@RequestBody EventoGenericoDTO body, BindingResult validationResult,
-                                     @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
-        return this.eventoGenericoService.saveEventoGenerico(body);
+    public List<EventoGenerico> nuovoEvento(@RequestBody EventoGenericoDTO body, BindingResult validationResult,
+                                            @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
+        return (List<EventoGenerico>) this.eventoGenericoService.saveEventoGenerico(body);
     }
 
 

@@ -29,8 +29,12 @@ public interface EventoGenericoRepository extends JpaRepository<EventoGenerico, 
 
     List<EventoGenerico> findAllByNote(String note);
 
+    List<EventoGenerico> findAllByNomeAndDataInizioAfter(String nome, LocalDate dataInizio);
 
-    List<EventoGenerico> findAllByVisitaPrenotabile_idTipoVisita(UUID idTipovisita);
+    List<EventoGenerico> findByEventoRicorrente(boolean eventoRicorrente);
 
-    List<EventoGenerico> findAllByVisitaPrenotabile_Tipo(String tipo);
+
+//    List<EventoGenerico> findAllByVisitaPrenotabile_idTipoVisita(UUID idTipovisita);
+//
+//    List<EventoGenerico> findAllByVisitaPrenotabile_Tipo(String tipo);  TODO DA SPOSTARE NEL CALENDARIO VISITA MEDICA 
 }

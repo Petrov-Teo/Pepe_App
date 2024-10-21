@@ -1,9 +1,12 @@
 package PetrovTodor.PepeMedicalKids.services.calendario;
 
 import PetrovTodor.PepeMedicalKids.entities.calendario.EventoGenerico;
+import PetrovTodor.PepeMedicalKids.enums.TipoRicorrenza;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
 import PetrovTodor.PepeMedicalKids.payload.calendar.EventoGenericoDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.calendario.EventoGenericoRepository;
+import PetrovTodor.PepeMedicalKids.services.emeil.EmailService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +24,8 @@ import java.util.UUID;
 public class EventoGenericoService {
     @Autowired
     private EventoGenericoRepository eventoGenericoRepository;
+    @Autowired
+    private EmailService emailService;
 
 
     //CRUD
@@ -35,21 +41,85 @@ public class EventoGenericoService {
                 .orElseThrow(() -> new NotFoundException("Evento non trovato con ID: " + idEvento));
     }
 
-    public EventoGenerico saveEventoGenerico(EventoGenericoDTO body) {
-        EventoGenerico eventoGenerico = new
-                EventoGenerico(body.nome(),
-                body.dataInizio(),
+    public List<EventoGenerico> saveEventoGenerico(EventoGenericoDTO body) throws MessagingException {
+        List<EventoGenerico> eventiGenerici = new ArrayList<>();
+
+
+        if (!body.eventoRicorrente()) {
+            EventoGenerico eventoGenerico = createEventoGenerico(body, body.dataInizio());
+            eventiGenerici.add(eventoGenerico);
+        } else {
+
+            LocalDate dataInizio = body.dataInizio();
+            LocalDate dataFine = body.dataFineRicorrenza();
+
+
+            if (dataFine == null || dataFine.isBefore(dataInizio)) {
+                throw new IllegalArgumentException("La data di fine deve essere successiva alla data di inizio.");
+            }
+
+            switch (body.tipoRicorrenza()) {
+                case GIORNALIERA:
+                    while (!dataInizio.isAfter(dataFine)) {
+                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
+                        eventiGenerici.add(eventoGenerico);
+                        dataInizio = dataInizio.plusDays(1);
+                    }
+                    break;
+                case SETTIMANALE:
+                    while (!dataInizio.isAfter(dataFine)) {
+                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
+                        eventiGenerici.add(eventoGenerico);
+                        dataInizio = dataInizio.plusWeeks(1);
+                    }
+                    break;
+                case MENSILE:
+                    while (!dataInizio.isAfter(dataFine)) {
+                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
+                        eventiGenerici.add(eventoGenerico);
+                        dataInizio = dataInizio.plusMonths(1);
+                    }
+                    break;
+                case ANNUALE:
+                    while (!dataInizio.isAfter(dataFine)) {
+                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
+                        eventiGenerici.add(eventoGenerico);
+                        dataInizio = dataInizio.plusYears(1);
+                    }
+                    break;
+            }
+        }
+        for (String partecipante : body.partecipanti()) {
+            emailService.sendEventNotification(partecipante, body);
+        }
+
+
+        return eventoGenericoRepository.saveAll(eventiGenerici);
+    }
+
+    private EventoGenerico createEventoGenerico(EventoGenericoDTO body, LocalDate dataInizio) {
+
+        EventoGenerico eventoGenerico = new EventoGenerico(
+                body.nome(),
+                dataInizio,
                 body.oraInizio(),
                 body.oraFine(),
                 body.note(),
                 body.luogo(),
-                body.visitaPrenotabile(),
                 body.partecipanti(),
-                body.eventoRiccorrente(),
+                true,
                 body.tipoRicorrenza(),
-                body.dataFineRiccorenza());
-        return eventoGenericoRepository.save(eventoGenerico);
+                body.dataFineRicorrenza());
+        if (body.tipoRicorrenza() == null) {
+            eventoGenerico.setTipoRicorrenza(TipoRicorrenza.NON_RICORRENTE);
+        }
+
+        if (body.dataFineRicorrenza() == null) {
+            eventoGenerico.setDataFineRicorrenza(body.dataInizio());
+        }
+        return eventoGenerico;
     }
+    
 
     public EventoGenerico modificaEventoGenerico(UUID idEvento, EventoGenericoDTO body) {
         EventoGenerico eventoDaModificare = findById(idEvento);
@@ -59,11 +129,10 @@ public class EventoGenericoService {
         eventoDaModificare.setOraFine(body.oraFine());
         eventoDaModificare.setNote(body.note());
         eventoDaModificare.setLuogo(body.luogo());
-        eventoDaModificare.setVisitaPrenotabile(body.visitaPrenotabile());
         eventoDaModificare.setPartecipanti(body.partecipanti());
-        eventoDaModificare.setEventoRicorrente(body.eventoRiccorrente());
+        eventoDaModificare.setEventoRicorrente(body.eventoRicorrente());
         eventoDaModificare.setTipoRicorrenza(body.tipoRicorrenza());
-        eventoDaModificare.setDataFineRicorrenza(body.dataFineRiccorenza());
+        eventoDaModificare.setDataFineRicorrenza(body.dataFineRicorrenza());
 
         return eventoGenericoRepository.save(eventoDaModificare);
 
@@ -123,21 +192,21 @@ public class EventoGenericoService {
         return eventi;
     }
 
-    public List<EventoGenerico> trovaEventiPerVisita(String visitaPrenotabile) {
-        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByVisitaPrenotabile_Tipo(visitaPrenotabile);
-        if (eventi.isEmpty()) {
-            throw new NotFoundException("Nessun evento trovato per la visita: " + visitaPrenotabile);
-        }
-        return eventi;
-    }
+//    public List<EventoGenerico> trovaEventiPerVisita(String visitaPrenotabile) {
+//        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByVisitaPrenotabile_Tipo(visitaPrenotabile);
+//        if (eventi.isEmpty()) {
+//            throw new NotFoundException("Nessun evento trovato per la visita: " + visitaPrenotabile);
+//        }
+//        return eventi;
+//    } TODO DA SPOSTARE NEL CALENDARIO VISITA MEDICA
 
-    public List<EventoGenerico> trovaEventiPerIdVisitaPrenotabile(UUID visitaPrenotabile) {
-        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByVisitaPrenotabile_idTipoVisita(visitaPrenotabile);
-        if (eventi.isEmpty()) {
-            throw new NotFoundException("Nessun evento trovato per la visita: " + visitaPrenotabile);
-        }
-        return eventi;
-    }
+//    public List<EventoGenerico> trovaEventiPerIdVisitaPrenotabile(UUID visitaPrenotabile) {
+//        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByVisitaPrenotabile_idTipoVisita(visitaPrenotabile);
+//        if (eventi.isEmpty()) {
+//            throw new NotFoundException("Nessun evento trovato per la visita: " + visitaPrenotabile);
+//        }
+//        return eventi;
+//    } TODO DA SPOSTARE NEL CALENDARIO VISITA MEDICA
 
     public List<EventoGenerico> trovaTuttiGliEventiPerNomeEData(String nome, LocalDate data) {
         List<EventoGenerico> eventi = eventoGenericoRepository.findAllByNomeAndDataInizio(nome, data);
