@@ -27,17 +27,17 @@ public class MedicoController {
 
     //FIND ALL
     @GetMapping
-    @PreAuthorize("hasAnyAuthority(, 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Page<Medico> findAll(@RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "10") int size,
-                                @RequestParam(defaultValue = "codAdmin") String sorteBy) {
+                                @RequestParam(defaultValue = "codMedico") String sorteBy) {
 
         return medicoService.findAll(page, size, sorteBy);
     }
 
     // FIND ME
     @GetMapping("/me")
-    @PreAuthorize("hasAnyAuthority( 'MEDICO','RECEPTIONIST','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MEDICO')")
     public Medico findMe(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             throw new IllegalArgumentException("L'utente non è autenticato!");
@@ -47,9 +47,9 @@ public class MedicoController {
         return medico;
     }
 
-    // SAVE ADMIN
+    // SAVE
     @PostMapping("/register/medici")
-    @PreAuthorize("hasAnyAuthority( 'MEDICO','RECEPTIONIST','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('MEDICO','RECEPTIONIST','ADMIN')")
     public Medico save(@RequestBody MedicoDTO medico, BindingResult validationResult,
                        @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
         return this.medicoService.save(medico);
@@ -57,7 +57,7 @@ public class MedicoController {
 
     //FIND BY ID
     @GetMapping("/{id}")
-
+    @PreAuthorize("hasAnyAuthority('MEDICO','RECEPTIONIST','ADMIN')")
     public Medico getAdminById(@PathVariable UUID id) throws MessagingException {
         return medicoService.findMedicoByIdMedico(id);
 

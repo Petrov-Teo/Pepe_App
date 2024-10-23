@@ -1,8 +1,9 @@
 package PetrovTodor.PepeMedicalKids.security;
 
-
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
+import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.services.users.AdminService;
+import PetrovTodor.PepeMedicalKids.services.users.MedicoService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +24,12 @@ import java.util.UUID;
 public class JWTChekFilter extends OncePerRequestFilter {
     @Autowired
     private JWTTools jwtTools;
+
     @Autowired
-    private AdminService userService;
+    private AdminService adminService;
+
+    @Autowired
+    private MedicoService medicoService; // Aggiungi MedicoService
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -36,18 +41,41 @@ public class JWTChekFilter extends OncePerRequestFilter {
         String accessToken = authHeader.replace("Bearer ", "");
 
         try {
-
             jwtTools.verifyToken(accessToken);
 
-
             String id = jwtTools.extractDipendenteFromToken(accessToken);
-            Optional<Admin> userAttuale = Optional.ofNullable(this.userService.findById(UUID.fromString(id)));
+            String ruolo = jwtTools.extractRuoloFromToken(accessToken);
 
-            if (userAttuale.isPresent()) {
-                Admin user = userAttuale.get();
+            // Dichiarazione dell'oggetto utente
+            Object user = null;
 
-                Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            switch (ruolo) {
+                case "ADMIN":
+
+                    Optional<Admin> adminOptional = Optional.ofNullable(adminService.findById(UUID.fromString(id)));
+                    if (adminOptional.isPresent()) {
+                        user = adminOptional.get();
+                        Authentication adminAuth = new UsernamePasswordAuthenticationToken(user, null, ((Admin) user).getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(adminAuth);
+                    }
+                    break;
+
+                case "MEDICO":
+                   
+                    Optional<Medico> medicoOptional = Optional.ofNullable(medicoService.findMedicoByIdMedico(UUID.fromString(id))); // Assumendo che MedicoService abbia il metodo findById
+                    if (medicoOptional.isPresent()) {
+                        user = medicoOptional.get();
+                        Authentication medicoAuth = new UsernamePasswordAuthenticationToken(user, null, ((Medico) user).getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(medicoAuth);
+                    }
+                    break;
+
+                case "RECEPTIONIST":
+                    // Implementa la logica per Receptionist se necessario
+                    break;
+
+                default:
+                    throw new ServletException("Ruolo non valido");
             }
 
         } catch (Exception e) {
@@ -60,8 +88,6 @@ public class JWTChekFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // Ci serve per disabilitare alcune richieste ad esempio su determinati endpoint oppure determinati controller
-        // Nel nostro caso non vengano chiamati i token in fase di login e/o registrazione
         return new AntPathMatcher().match("/auth/**", request.getServletPath());
     }
 }

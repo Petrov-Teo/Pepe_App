@@ -27,7 +27,7 @@ public class AuthControllerAdmin {
 
     @PostMapping("/login/admins")
     public LoginResponseTokenDTO loginAdmin(@RequestBody LoginRequestDTO payload) throws MessagingException {
-        return new LoginResponseTokenDTO(this.authService.controlloCredenzialiAndGenerazioneToken(payload));
+        return new LoginResponseTokenDTO(this.authService.controlloCredenzialiAndGenerazioneTokenADmin(payload));
     }
 
     @PostMapping("/reset-password/admins")
@@ -35,5 +35,5 @@ public class AuthControllerAdmin {
         Admin updatedAdmin = adminService.resetPasswordConMail(passwordResetMailDTO);
         return new ResponseEntity<>(updatedAdmin, HttpStatus.OK);
     }
-    
+
 }

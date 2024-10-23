@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,9 +28,9 @@ public class CalendarioController {
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public Page<EventoGenerico> findAll(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size,
-                                        @RequestParam(defaultValue = "idEvento") String sorteBy) {
+                                        @RequestParam(defaultValue = "idEvento") String sortBy) {
 
-        return eventoGenericoService.findAll(page, size, sorteBy);
+        return eventoGenericoService.findAll(page, size, sortBy);
     }
 
     //POST NEW
@@ -37,12 +38,11 @@ public class CalendarioController {
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public List<EventoGenerico> nuovoEvento(@RequestBody EventoGenericoDTO body, BindingResult validationResult,
                                             @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
-        return (List<EventoGenerico>) this.eventoGenericoService.saveEventoGenerico(body);
+        return this.eventoGenericoService.saveEventoGenerico(body);
     }
 
-
-    //POST UPDITE
-    @PostMapping("/update-evento/{id}")
+    //POST UPDATE
+    @PutMapping("/updateEventi/{id}")
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public EventoGenerico updateEventoGenerico(@PathVariable UUID id, @RequestBody EventoGenericoDTO payload) throws MessagingException {
         return this.eventoGenericoService.modificaEventoGenerico(id, payload);
@@ -59,7 +59,23 @@ public class CalendarioController {
         return this.eventoGenericoService.findByNomeEvento(nomeEvento);
     }
 
+
+    @GetMapping("/note/{noteEvento}")
+    public String findByNote(@PathVariable String noteEvento) throws MessagingException {
+        return this.eventoGenericoService.findByNoteEvento(noteEvento);
+    }
+
+    @GetMapping("/data/{dataEvento}")
+    public List<EventoGenerico> findByData(@PathVariable LocalDate dataEvento) throws MessagingException {
+        return this.eventoGenericoService.trovaTuttiGliEventiPerData(dataEvento);
+    }
+
+
+    // DELETE EVENT
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
+    public void deleteEvento(@PathVariable UUID id, @RequestParam(required = false) Boolean deleteEntireSeries) {
+        boolean deleteSeries = (deleteEntireSeries != null) && deleteEntireSeries; // Valuta correttamente il valore
+        eventoGenericoService.findAndDelete(id, deleteSeries);
+    }
 }
-
-
-

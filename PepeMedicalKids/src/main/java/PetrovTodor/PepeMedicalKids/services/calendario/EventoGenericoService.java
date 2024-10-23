@@ -27,9 +27,7 @@ public class EventoGenericoService {
     @Autowired
     private EmailService emailService;
 
-
     //CRUD
-
 
     public Page<EventoGenerico> findAll(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -44,15 +42,12 @@ public class EventoGenericoService {
     public List<EventoGenerico> saveEventoGenerico(EventoGenericoDTO body) throws MessagingException {
         List<EventoGenerico> eventiGenerici = new ArrayList<>();
 
-
         if (!body.eventoRicorrente()) {
             EventoGenerico eventoGenerico = createEventoGenerico(body, body.dataInizio());
             eventiGenerici.add(eventoGenerico);
         } else {
-
             LocalDate dataInizio = body.dataInizio();
             LocalDate dataFine = body.dataFineRicorrenza();
-
 
             if (dataFine == null || dataFine.isBefore(dataInizio)) {
                 throw new IllegalArgumentException("La data di fine deve essere successiva alla data di inizio.");
@@ -93,12 +88,10 @@ public class EventoGenericoService {
             emailService.sendEventNotification(partecipante, body);
         }
 
-
         return eventoGenericoRepository.saveAll(eventiGenerici);
     }
 
     private EventoGenerico createEventoGenerico(EventoGenericoDTO body, LocalDate dataInizio) {
-
         EventoGenerico eventoGenerico = new EventoGenerico(
                 body.nome(),
                 dataInizio,
@@ -110,6 +103,7 @@ public class EventoGenericoService {
                 true,
                 body.tipoRicorrenza(),
                 body.dataFineRicorrenza());
+
         if (body.tipoRicorrenza() == null) {
             eventoGenerico.setTipoRicorrenza(TipoRicorrenza.NON_RICORRENTE);
         }
@@ -119,7 +113,6 @@ public class EventoGenericoService {
         }
         return eventoGenerico;
     }
-    
 
     public EventoGenerico modificaEventoGenerico(UUID idEvento, EventoGenericoDTO body) {
         EventoGenerico eventoDaModificare = findById(idEvento);
@@ -135,13 +128,26 @@ public class EventoGenericoService {
         eventoDaModificare.setDataFineRicorrenza(body.dataFineRicorrenza());
 
         return eventoGenericoRepository.save(eventoDaModificare);
-
     }
 
-    public void findAndDelete(UUID idEvento) {
+    public void findAndDelete(UUID idEvento, boolean deleteEntireSeries) {
         EventoGenerico eventoDaCancellare = findById(idEvento);
-        eventoGenericoRepository.delete(eventoDaCancellare);
 
+        if (deleteEntireSeries) {
+            // Cancella tutti gli eventi ricorrenti e l'evento specificato
+            List<EventoGenerico> eventiRicorrenti = eventoGenericoRepository.findAllByNomeAndDataInizioAfter(
+                    eventoDaCancellare.getNome(),
+                    eventoDaCancellare.getDataInizio()
+            );
+
+            // Aggiungi l'evento corrente per assicurarti che venga cancellato
+            eventiRicorrenti.add(eventoDaCancellare);
+
+            eventoGenericoRepository.deleteAll(eventiRicorrenti);
+        } else {
+            // Cancella solo l'evento specificato
+            eventoGenericoRepository.delete(eventoDaCancellare);
+        }
     }
 
     public String findByNomeEvento(String nomeEvento) {
@@ -191,22 +197,6 @@ public class EventoGenericoService {
         }
         return eventi;
     }
-
-//    public List<EventoGenerico> trovaEventiPerVisita(String visitaPrenotabile) {
-//        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByVisitaPrenotabile_Tipo(visitaPrenotabile);
-//        if (eventi.isEmpty()) {
-//            throw new NotFoundException("Nessun evento trovato per la visita: " + visitaPrenotabile);
-//        }
-//        return eventi;
-//    } TODO DA SPOSTARE NEL CALENDARIO VISITA MEDICA
-
-//    public List<EventoGenerico> trovaEventiPerIdVisitaPrenotabile(UUID visitaPrenotabile) {
-//        List<EventoGenerico> eventi = eventoGenericoRepository.findAllByVisitaPrenotabile_idTipoVisita(visitaPrenotabile);
-//        if (eventi.isEmpty()) {
-//            throw new NotFoundException("Nessun evento trovato per la visita: " + visitaPrenotabile);
-//        }
-//        return eventi;
-//    } TODO DA SPOSTARE NEL CALENDARIO VISITA MEDICA
 
     public List<EventoGenerico> trovaTuttiGliEventiPerNomeEData(String nome, LocalDate data) {
         List<EventoGenerico> eventi = eventoGenericoRepository.findAllByNomeAndDataInizio(nome, data);

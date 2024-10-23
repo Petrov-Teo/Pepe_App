@@ -17,12 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Table(name = "calendario_eventi_generici")
-<<<<<<< Updated upstream
-public class EventoGenerico extends EventoAbstr {
 
-=======
-public class EventoGenerico extends EventoAbstract {
->>>>>>> Stashed changes
+public class EventoGenerico extends EventoAbstr {
     private String luogo;
     @ElementCollection
     @CollectionTable(name = "calendario_evento_partecipanti", joinColumns = @JoinColumn(name = "evento_id"))

@@ -33,6 +33,8 @@ public interface EventoGenericoRepository extends JpaRepository<EventoGenerico, 
 
     List<EventoGenerico> findByEventoRicorrente(boolean eventoRicorrente);
 
+    List<EventoGenerico> findAllByNomeAndDataInizioBetween(String nome, LocalDate dataInizio, LocalDate dataFine);
+
 
 //    List<EventoGenerico> findAllByVisitaPrenotabile_idTipoVisita(UUID idTipovisita);
 //
