@@ -11,8 +11,8 @@ import java.util.UUID;
 @Repository
 public interface AnalisiMedicheRepository extends JpaRepository<AnalisiMediche, UUID> {
 
-    Optional<AnalisiMediche> findAnalisiMedicheByCodAnalisi(String codAnalisi);
+    Optional<AnalisiMediche> findByCodAnalisi(String codAnalisi);
 
     @Query("SELECT MAX(codAnalisi) FROM AnalisiMediche a")
-    String findMaxCodAdmin();
+    String findMaxCodAnalisi();
 }

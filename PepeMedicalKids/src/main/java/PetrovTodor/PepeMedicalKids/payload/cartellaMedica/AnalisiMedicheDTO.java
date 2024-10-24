@@ -12,6 +12,8 @@ public record AnalisiMedicheDTO(
         @NotBlank(message = "Il Campo tipoPrescrizione è obbligatorio!")
         TipoPrescrizione tipoPrescrizione,
         @NotBlank(message = "Il Camo analisiRegionali è obbligatorio!")
-        List<AnalisiRegionali> analisiRegionali
+        List<AnalisiRegionali> analisiRegionali,
+        @NotBlank(message = "Il Camo medicoAutore è obbligatorio!")
+        String medicoAutore
 ) {
 }

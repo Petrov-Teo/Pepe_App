@@ -24,10 +24,7 @@ public record MedicoDTO(
 
         @NotBlank(message = "Il Campo e-mail è Obbligatorio!")
         String email,
-
-        @NotBlank(message = "Il Campo Password è Obbligatorio!")
-        String password,
-
+        
         @NotBlank(message = "Il Campo Numero di Telefono è Obbligatorio!")
         @Min(10) @Max(10)
         String numeroDiTelefono,

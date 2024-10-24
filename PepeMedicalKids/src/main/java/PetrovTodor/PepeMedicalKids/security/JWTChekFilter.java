@@ -1,11 +1,11 @@
 package PetrovTodor.PepeMedicalKids.security;
 
-
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
+import PetrovTodor.PepeMedicalKids.entities.users.Medico;
 import PetrovTodor.PepeMedicalKids.services.users.AdminService;
+import PetrovTodor.PepeMedicalKids.services.users.MedicoService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,32 +24,74 @@ import java.util.UUID;
 public class JWTChekFilter extends OncePerRequestFilter {
     @Autowired
     private JWTTools jwtTools;
+
     @Autowired
-    private AdminService userService;
+    private AdminService adminService;
+
+    @Autowired
+    private MedicoService medicoService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        //E' il metodo che verrà richiamato per ogni richiesta, tranne quelle che escludiamo
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
-            throw new UnavailableException("Si prega di inserire il token nell'Authorization Header!");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String accessToken = authHeader.replace("Bearer ", "");
 
-        jwtTools.verifyToken(accessToken);
-        String id = jwtTools.extractDipendenteFromToken(accessToken);
-        Optional<Admin> userAttuale = Optional.ofNullable(this.userService.findById(UUID.fromString(id)));
+        try {
+            jwtTools.verifyToken(accessToken);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userAttuale, null, userAttuale.get().getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);// <-- associo l'utente autenticato al Context
+            String id = jwtTools.extractDipendenteFromToken(accessToken);
+            String ruolo = jwtTools.extractRuoloFromToken(accessToken);
+
+            // Dichiarazione dell'oggetto utente
+            Object user = null;
+
+            switch (ruolo) {
+                case "ADMIN":
+
+                    Optional<Admin> adminOptional = Optional.ofNullable(adminService.findById(UUID.fromString(id)));
+                    if (adminOptional.isPresent()) {
+                        user = adminOptional.get();
+                        Authentication adminAuth = new UsernamePasswordAuthenticationToken(user, null, ((Admin) user).getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(adminAuth);
+                        System.out.println("Authenticated as ADMIN: " + ((Admin) user).getIdUtente());
+                        System.out.println("Authorities: " + ((Admin) user).getAuthorities());
+                    }
+                    break;
+
+                case "MEDICO":
+
+                    Optional<Medico> medicoOptional = Optional.ofNullable(medicoService.findMedicoByIdMedico(UUID.fromString(id)));
+                    if (medicoOptional.isPresent()) {
+                        user = medicoOptional.get();
+                        Authentication medicoAuth = new UsernamePasswordAuthenticationToken(user, null, ((Medico) user).getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(medicoAuth);
+                        System.out.println("Authenticated as Medico: " + ((Medico) user).getIdUtente());
+                        System.out.println("Authorities: " + ((Medico) user).getAuthorities());
+                    }
+                    break;
+
+                case "RECEPTIONIST":
+                    // Implementa la logica per Receptionist se necessario
+                    break;
+
+                default:
+                    throw new ServletException("Ruolo non valido");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServletException("Token non valido");
+        }
 
         filterChain.doFilter(request, response);
-
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // Ci serve per disabilitare alcune richieste ad esempio su determinati endpoint oppure determinati controller
-        // Nel nostro caso non vengano chiamati i token in fase di login e/o registrazione
         return new AntPathMatcher().match("/auth/**", request.getServletPath());
     }
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @ToString
-public class EventoAbstr {
+public class EventoAbstract {
     @Id
     @GeneratedValue
     @Setter(AccessLevel.NONE)
@@ -26,7 +26,7 @@ public class EventoAbstr {
     private String note;
 
 
-    public EventoAbstr(String nome, LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note) {
+    public EventoAbstract(String nome, LocalDate dataInizio, LocalTime oraInizio, LocalTime oraFine, String note) {
         this.nome = nome;
         this.dataInizio = dataInizio;
         this.oraInizio = oraInizio;

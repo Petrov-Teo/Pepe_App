@@ -36,6 +36,7 @@ public class AdminService {
     public Admin saveAdmin(AdminDTO admin) throws MessagingException {
 
         String ultimoCodice = adminRepository.findMaxCodAdmin();
+        String password = generateTemporaryPassword();
 
         Admin nuovoAdmin = new Admin(
                 admin.codiceFiscale(),
@@ -44,17 +45,17 @@ public class AdminService {
                 admin.dataDiNascita(),
                 admin.luogoDiNascita(),
                 admin.email(),
-                passwordEncoder.encode(admin.password()),
+                passwordEncoder.encode(password),
                 admin.numeroDiTelefono()
         );
-
+        nuovoAdmin.setPasswordTemporanea(true);
         nuovoAdmin.generaCodice(ultimoCodice);
 
         Admin savedAdmin = adminRepository.save(nuovoAdmin);
 
         String email = admin.email();
         String oggetto = "Account Creato Correttamente!";
-        String htmlText = generateWelcomeEmailHtml(admin);
+        String htmlText = generateWelcomeEmailHtml(admin, password);
 
         try {
             emailService.sendHtmlMessage(email, oggetto, htmlText);
@@ -65,12 +66,13 @@ public class AdminService {
         return savedAdmin;
     }
 
-    private String generateWelcomeEmailHtml(AdminDTO admin) {
+    private String generateWelcomeEmailHtml(AdminDTO admin, String temporaryPassword) {
         return "<html>"
                 + "<body>"
                 + "<h1 style='color: #4CAF50;'>Benvenuto su Pepe Medical Kids!</h1>"
                 + "<p>Ciao <b>" + admin.nome() + " " + admin.cognome() + "</b>,</p>"
                 + "<p>Grazie di esserti registrato. Siamo felici di averti con noi.</p>"
+                + "<p>La tua password temporanea è: <b>" + temporaryPassword + "</b></p>" // Aggiungi la password temporanea
                 + "<p>Accedi al tuo account <a href='https://www.pepemedicalkids.com/login'>qui</a> e inizia a esplorare i nostri servizi!</p>"
                 + "<br><p>Ti aspettiamo presto!</p>"
                 + "<p>Il Team di Pepe Medical Kids</p>"
@@ -150,8 +152,8 @@ public class AdminService {
         Admin found = findById(idAdmin);
         this.adminRepository.delete(found);
     }
-    // RESET PASSWORD
 
+    // RESET PASSWORD
     public Admin resetPassword(UUID idAdmin, PasswordResetDTO passwordResetDTO) {
         Admin foundAdmin = findById(idAdmin);
 
@@ -164,6 +166,7 @@ public class AdminService {
 
         String subject = "Cambio Password";
         String text = "La tua password è stata cambiata con successo!";
+        foundAdmin.setPasswordTemporanea(false);
 
         Admin updatedAdmin = this.adminRepository.save(foundAdmin);
 
@@ -180,6 +183,7 @@ public class AdminService {
         String temporaryPassword = generateTemporaryPassword();
 
         foundAdmin.setPassword(passwordEncoder.encode(temporaryPassword));
+        foundAdmin.setPasswordTemporanea(true);
         adminRepository.save(foundAdmin);
 
         String subject = "Reset Password";
@@ -192,6 +196,7 @@ public class AdminService {
         } catch (EmailSendingException e) {
             throw new EmailSendingException("Impossibile inviare l'email con la password provvisoria.");
         }
+
 
         return foundAdmin;
     }

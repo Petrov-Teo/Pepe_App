@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -22,16 +23,18 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Table(name = "personale_medico")
-public class Medico extends User {
+public class Medico extends User implements UserDetails {
     @Column(unique = true)
     private String codMedico;
     private String specializzazione;
     private String iscrizioneAlboN;
+    private boolean passwordTemporanea;
 
     public Medico(String codMedico, String specializzazione, String iscrizioneAlboN) {
         this.codMedico = codMedico;
         this.specializzazione = specializzazione;
         this.iscrizioneAlboN = iscrizioneAlboN;
+
     }
 
     public Medico(String codiceFiscale,
@@ -43,7 +46,8 @@ public class Medico extends User {
                   String password,
                   String numeroDiTelefono,
                   String specializzazione,
-                  String iscrizioneAlboN) {
+                  String iscrizioneAlboN
+    ) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.specializzazione = specializzazione;
         this.iscrizioneAlboN = iscrizioneAlboN;

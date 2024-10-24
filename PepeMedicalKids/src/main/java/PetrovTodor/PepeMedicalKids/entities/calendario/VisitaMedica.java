@@ -19,7 +19,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @ToString
 @Table(name = "calendario_visite_mediche")
-public class VisitaMedica extends EventoAbstr {
+public class VisitaMedica extends EventoAbstract {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "visita_prenotabile_id")
     private VisitaPrenotabile visitaPrenotabile;
