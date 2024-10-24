@@ -113,11 +113,11 @@ public class MedicoService {
         return savedMedico;
     }
 
-    private String generateWelcomeEmailHtml(MedicoDTO admin, String temporaryPassword) { // Aggiungi un parametro per la password
+    private String generateWelcomeEmailHtml(MedicoDTO medico, String temporaryPassword) { // Aggiungi un parametro per la password
         return "<html>"
                 + "<body>"
                 + "<h1 style='color: #4CAF50;'>Benvenuto su Pepe Medical Kids!</h1>"
-                + "<p>Ciao <b>" + admin.nome() + " " + admin.cognome() + "</b>,</p>"
+                + "<p>Ciao <b>" + medico.nome() + " " + medico.cognome() + "</b>,</p>"
                 + "<p>Grazie di esserti registrato. Siamo felici di averti con noi.</p>"
                 + "<p>La tua password temporanea è: <b>" + temporaryPassword + "</b></p>" // Aggiungi la password temporanea
                 + "<p>Accedi al tuo account <a href='https://www.pepemedicalkids.com/login'>qui</a> e inizia a esplorare i nostri servizi!</p>"
@@ -149,8 +149,8 @@ public class MedicoService {
     }
 
     // RESET PASSWORD
-    public Medico resetPassword(UUID idAdmin, PasswordResetDTO passwordResetDTO) {
-        Medico foundMedico = findMedicoByIdMedico(idAdmin);
+    public Medico resetPassword(UUID idUtente, PasswordResetDTO passwordResetDTO) {
+        Medico foundMedico = findMedicoByIdMedico(idUtente);
 
         if (!passwordEncoder.matches(passwordResetDTO.oldPassword(), foundMedico.getPassword())) {
             throw new IllegalArgumentException("La vecchia password non è corretta!");

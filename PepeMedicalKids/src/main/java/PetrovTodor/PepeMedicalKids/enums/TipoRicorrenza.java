@@ -1,5 +1,5 @@
 package PetrovTodor.PepeMedicalKids.enums;
 
 public enum TipoRicorrenza {
-    GIORNALIERA, SETTIMANALE, MENSILE, ANNUALE
+    NON_RICORRENTE, GIORNALIERA, SETTIMANALE, MENSILE, ANNUALE
 }

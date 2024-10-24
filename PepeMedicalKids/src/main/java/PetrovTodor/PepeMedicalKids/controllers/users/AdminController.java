@@ -25,7 +25,7 @@ public class AdminController {
 
     //FIND ALL
     @GetMapping
-    @PreAuthorize("hasAnyAuthority(, 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Page<Admin> findAll(@RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "10") int size,
                                @RequestParam(defaultValue = "codAdmin") String sorteBy) {
@@ -76,8 +76,9 @@ public class AdminController {
     }
 
     // RESET PASSWORD
-    @PostMapping("/{id}/reset-password")
+    @PostMapping("/reset-password/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Admin resetPassword(@PathVariable UUID id, @RequestBody PasswordResetDTO passwordResetDTO) throws BadRequestException {
         return this.adminService.resetPassword(id, passwordResetDTO);
 

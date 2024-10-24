@@ -1,5 +1,6 @@
 package PetrovTodor.PepeMedicalKids.services.emeil;
 
+import PetrovTodor.PepeMedicalKids.payload.calendar.EventoGenericoDTO;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class EmailService {
@@ -42,5 +45,27 @@ public class EmailService {
         helper.setText(htmlText, true); // Imposta il secondo parametro su 'true' per indicare che il testo è in HTML
 
         mailSender.send(message);
+    }
+
+    public void sendEventNotification(String to, EventoGenericoDTO event) throws MessagingException {
+        String subject = "Nuovo Evento: " + event.nome();
+        String htmlBody = createHtmlEmailBody(event);  // Metodo per creare il corpo dell'email con i dettagli dell'evento
+        sendHtmlMessage(to, subject, htmlBody);
+    }
+
+    private String createHtmlEmailBody(EventoGenericoDTO body) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        return "<html>" +
+                "<body>" +
+                "<h1>Nuovo Evento: " + body.nome() + "</h1>" +
+                "<p>Data Inizio: " + body.dataInizio().format(formatter) + "</p>" +
+                "<p>Data Fine Ricorrenza: " + body.dataFineRicorrenza().format(formatter) + "</p>" +
+                "<p>Ora Inizio: " + body.oraInizio() + "</p>" +
+                "<p>Ora Fine: " + body.oraFine() + "</p>" +
+                "<p>Luogo: " + body.luogo() + "</p>" +
+                "<p>Note: " + body.note() + "</p>" +
+                "</body>" +
+                "</html>";
     }
 }
