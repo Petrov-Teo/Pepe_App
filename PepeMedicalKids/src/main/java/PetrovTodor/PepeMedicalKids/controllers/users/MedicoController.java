@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +51,7 @@ public class MedicoController {
 
     // SAVE
     @PostMapping("/register/medici")
-    @PreAuthorize("hasAnyAuthority('MEDICO','RECEPTIONIST','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public Medico save(@RequestBody MedicoDTO medico, BindingResult validationResult,
                        @AuthenticationPrincipal UserDetails userDetails) throws MessagingException {
         return this.medicoService.save(medico);
@@ -57,7 +59,7 @@ public class MedicoController {
 
     //FIND BY ID
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('MEDICO','RECEPTIONIST','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public Medico getAdminById(@PathVariable UUID id) throws MessagingException {
         return medicoService.findMedicoByIdMedico(id);
 
@@ -66,7 +68,7 @@ public class MedicoController {
     //UPDATE MEDICO
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN','RECEPTIONIST')")
+    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public Medico updateAdmin(@PathVariable UUID id, @RequestBody MedicoUpdateDTO payload) throws MessagingException {
         return this.medicoService.findAndUpdate(id, payload);
     }
@@ -74,17 +76,21 @@ public class MedicoController {
     // CANCELLA
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN','RECEPTIONIST')")
+    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public void deleteAdmin(@PathVariable UUID id) throws MessagingException {
         this.medicoService.findAndDelete(id);
     }
 
     // RESET PASSWORD
-    @PostMapping("/reset-password/{id}")
+    @PostMapping("/reset-password/{idMedico}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority( 'MEDICO','ADMIN')")
-    public Medico resetPassword(@PathVariable UUID id, @RequestBody PasswordResetDTO passwordResetDTO) throws BadRequestException {
-        return this.medicoService.resetPassword(id, passwordResetDTO);
-
+    @PreAuthorize("hasAnyAuthority('MEDICO')")
+    public Medico resetPassword(@PathVariable UUID idMedico,
+                                @RequestBody PasswordResetDTO passwordResetDTO
+    ) throws BadRequestException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("User: " + authentication.getName().isEmpty());
+        System.out.println("Authorities: " + authentication.getAuthorities().toString());
+        return this.medicoService.resetPassword(idMedico, passwordResetDTO);
     }
 }

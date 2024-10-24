@@ -18,8 +18,6 @@ public record AdminDTO(
         String luogoDiNascita,
         @NotBlank(message = "Il Campo Ruolo è Obbligatorio!")
         String email,
-        @NotBlank(message = "Il Campo Password è Obbligatorio!")
-        String password,
         @NotBlank(message = "Il Campo Numero di Telefono è Obbligatorio!")
         String numeroDiTelefono
 ) {

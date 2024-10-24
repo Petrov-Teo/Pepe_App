@@ -42,12 +42,12 @@ public class JWTTools {
     }
 
     public String extractRuoloFromToken(String token) {
-        // Implementa la logica per estrarre il ruolo dal token JWT
         Claims claims = Jwts.parser()
-                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())).build() // La tua chiave segreta
+                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())).build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        return claims.get("ruolo", String.class); // Assumendo che il ruolo sia memorizzato con la chiave "ruolo"
+        String ruolo = claims.get("ruolo", String.class);
+        System.out.println("Ruolo estratto: " + ruolo);  // Aggiungi un log per il ruolo estratto
+        return ruolo;
     }
 }

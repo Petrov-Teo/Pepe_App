@@ -30,7 +30,7 @@ public class AuthControllerMedico {
         return new LoginResponseTokenDTO(this.authService.controlloCredenzialiAndGenerazioneTokenMedico(payload));
     }
 
-    @PostMapping("/reset-password/medico")
+    @PostMapping("/reset-password/medici")
     public ResponseEntity<Medico> resetPasswordByEmailMedico(@RequestBody PasswordResetMailDTO passwordResetMailDTO) throws MessagingException {
         Medico updatedAdmin = medicoServices.resetPasswordConMail(passwordResetMailDTO);
         return new ResponseEntity<>(updatedAdmin, HttpStatus.OK);

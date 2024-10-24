@@ -2,6 +2,8 @@ package PetrovTodor.PepeMedicalKids.repositorys.calendario;
 
 import PetrovTodor.PepeMedicalKids.entities.calendario.EventoGenerico;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -35,6 +37,8 @@ public interface EventoGenericoRepository extends JpaRepository<EventoGenerico, 
 
     List<EventoGenerico> findAllByNomeAndDataInizioBetween(String nome, LocalDate dataInizio, LocalDate dataFine);
 
+    @Query("SELECT e FROM EventoGenerico e WHERE e.id = :idEvento AND e.dataInizio >= CURRENT_DATE")
+    List<EventoGenerico> findFutureOccurrences(@Param("idEvento") UUID idEvento);
 
 //    List<EventoGenerico> findAllByVisitaPrenotabile_idTipoVisita(UUID idTipovisita);
 //

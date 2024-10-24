@@ -33,7 +33,6 @@ public class InitialAdminSetup {
                     dataDiNascita,
                     "Città",
                     "petrov@pigrecoservizi.com",
-                    password,
                     "numero di telefono"
             );
 

@@ -24,6 +24,7 @@ import java.util.Collections;
 @ToString
 public class Admin extends User implements UserDetails {
     private String codAdmin;
+    private boolean passwordTemporanea;
 
     public Admin(String codiceFiscale,
                  String nome,

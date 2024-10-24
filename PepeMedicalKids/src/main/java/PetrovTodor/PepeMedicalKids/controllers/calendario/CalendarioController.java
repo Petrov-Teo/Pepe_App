@@ -27,7 +27,7 @@ public class CalendarioController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public Page<EventoGenerico> findAll(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "99999") int size,
                                         @RequestParam(defaultValue = "idEvento") String sortBy) {
 
         return eventoGenericoService.findAll(page, size, sortBy);
@@ -44,7 +44,7 @@ public class CalendarioController {
     //POST UPDATE
     @PutMapping("/updateEventi/{id}")
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
-    public EventoGenerico updateEventoGenerico(@PathVariable UUID id, @RequestBody EventoGenericoDTO payload) throws MessagingException {
+    public List<EventoGenerico> updateEventoGenerico(@PathVariable UUID id, @RequestBody EventoGenericoDTO payload) throws MessagingException {
         return this.eventoGenericoService.modificaEventoGenerico(id, payload);
     }
 
