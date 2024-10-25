@@ -18,7 +18,7 @@ import java.util.List;
 @ToString
 @Table(name = "calendario_eventi_generici")
 
-public class EventoGenerico extends EventoAbstr {
+public class EventoGenerico extends EventoAbstract {
     private String luogo;
     @ElementCollection
     @CollectionTable(name = "calendario_evento_partecipanti", joinColumns = @JoinColumn(name = "evento_id"))
