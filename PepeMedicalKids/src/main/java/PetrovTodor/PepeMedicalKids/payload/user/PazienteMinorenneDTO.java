@@ -1,5 +1,6 @@
 package PetrovTodor.PepeMedicalKids.payload.user;
 
+import PetrovTodor.PepeMedicalKids.enums.TipoTutore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -21,5 +22,8 @@ public record PazienteMinorenneDTO(
         @NotNull(message = "Il Campo Minorenne S/N di Telefono è Obbligatorio!")
         boolean isMinorenne,
         @NotNull(message = "Il Campo Codice Genitore è Obbligatorio!")
-        GenitoreTutoreDTO genitoreTutore) {
+        GenitoreTutoreDTO genitoreTutore,
+        
+        @NotNull(message = "Il Campo Tipo Tutore/i è obbligatorio!")
+        TipoTutore tipoTutore) {
 }

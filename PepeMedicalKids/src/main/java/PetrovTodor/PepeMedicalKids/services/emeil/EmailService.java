@@ -68,4 +68,23 @@ public class EmailService {
                 "</body>" +
                 "</html>";
     }
+
+    public void sendContactResponse(String to, String nome) throws MessagingException {
+        String subject = "Conferma di Ricezione della tua Richiesta di Contatto";
+        String htmlBody = createContactResponseBody(nome);
+        sendHtmlMessage(to, subject, htmlBody);
+    }
+
+    private String createContactResponseBody(String nome) {
+        return "<html>" +
+                "<body>" +
+                "<h1>Gentile " + nome + ",</h1>" +
+                "<p>Grazie per averci contattato. Abbiamo ricevuto la tua richiesta e ti risponderemo al più presto possibile.</p>" +
+                "<p>Se hai altre domande o hai bisogno di assistenza, non esitare a contattarci nuovamente.</p>" +
+                "<br>" +
+                "<p>Distinti Saluti,</p>" +
+                "<p>Il team di Pepe Medical Kids</p>" +
+                "</body>" +
+                "</html>";
+    }
 }

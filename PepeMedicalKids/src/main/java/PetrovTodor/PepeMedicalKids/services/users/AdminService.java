@@ -177,14 +177,17 @@ public class AdminService {
 
     //RESET PASSWORD CON EMEIL
     public Admin resetPasswordConMail(PasswordResetMailDTO passwordResetMailDTO) {
-        Admin foundAdmin = adminRepository.findByEmail(passwordResetMailDTO.email())
-                .orElseThrow(() -> new NotFoundException("Nessun amministratore trovato con l'email: " + passwordResetMailDTO.email()));
+        Admin foundAdmin = adminRepository
+                .findByEmail(passwordResetMailDTO.email())
+                .orElseThrow(()
+                        -> new NotFoundException("Nessun amministratore trovato con l'email: " + passwordResetMailDTO.email()));
 
         String temporaryPassword = generateTemporaryPassword();
 
         foundAdmin.setPassword(passwordEncoder.encode(temporaryPassword));
         foundAdmin.setPasswordTemporanea(true);
-        adminRepository.save(foundAdmin);
+        adminRepository
+                .save(foundAdmin);
 
         String subject = "Reset Password";
         String text = "La tua password provvisoria è: " + temporaryPassword +
