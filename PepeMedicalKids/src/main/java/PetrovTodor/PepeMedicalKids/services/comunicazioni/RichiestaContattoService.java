@@ -50,6 +50,15 @@ public class RichiestaContattoService {
         return this.richiestaContattoRepository.save(richiestaContatto);
     }
 
+    public RichiestaContatto findAndGestisci(UUID idRichiestaContatto) {
+        RichiestaContatto richiestaContatto = this.richiestaContattoRepository
+                .findById(idRichiestaContatto)
+                .orElseThrow(()
+                        -> new NotFoundException(idRichiestaContatto));
+        richiestaContatto.changeGestito();
+        return this.richiestaContattoRepository.save(richiestaContatto);
+    }
+
     public RichiestaContatto findByName(String nome) {
         return this.richiestaContattoRepository
                 .findByNome(nome)

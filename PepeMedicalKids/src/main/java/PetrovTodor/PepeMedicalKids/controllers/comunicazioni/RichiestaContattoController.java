@@ -39,6 +39,13 @@ public class RichiestaContattoController {
         return this.richiestaContattoService.findByIdRichiestaContatto(id);
     }
 
+    @PostMapping("/gestisci/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','RECEPTIONIST')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RichiestaContatto findAndManage(@PathVariable UUID id) {
+        return this.richiestaContattoService.findAndGestisci(id);
+    }
+
     @PutMapping("/modifica/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','RECEPTIONIST')")
     @ResponseStatus(HttpStatus.CREATED)

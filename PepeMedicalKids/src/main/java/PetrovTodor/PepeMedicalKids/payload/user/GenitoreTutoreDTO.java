@@ -1,7 +1,6 @@
 package PetrovTodor.PepeMedicalKids.payload.user;
 
 import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
-import PetrovTodor.PepeMedicalKids.enums.TipoTutore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -28,7 +27,5 @@ public record GenitoreTutoreDTO(
 
         String note,
         @NotBlank(message = "Il Campo Tipo Tutore è obbligatorio!")
-        TipoTutore tipoTutore,
-        @NotNull(message = "Il Campo Paziente/i è obbligatorio!")
         List<Paziente> pazienti) {
 }

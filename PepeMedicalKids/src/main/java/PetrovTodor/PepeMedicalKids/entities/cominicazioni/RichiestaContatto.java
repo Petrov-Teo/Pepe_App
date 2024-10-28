@@ -25,16 +25,22 @@ public class RichiestaContatto {
     private String note;
     private boolean letto;
     private LocalDateTime dataInvio;
+    private boolean gestito;
 
     public RichiestaContatto(String nome, String email, String note) {
         this.nome = nome;
         this.email = email;
         this.note = note;
         this.letto = false;
+        this.gestito = false;
         this.dataInvio = LocalDateTime.now();
     }
 
     public void changeLetto() {
+        this.letto = true;
+    }
+
+    public void changeGestito() {
         this.letto = true;
     }
 
