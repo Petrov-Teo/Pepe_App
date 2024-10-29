@@ -1,10 +1,8 @@
 package PetrovTodor.PepeMedicalKids.entities.users;
 
 import PetrovTodor.PepeMedicalKids.enums.Ruolo;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import PetrovTodor.PepeMedicalKids.enums.TipoTutore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,10 +26,10 @@ public class Paziente extends User {
 
     @Column(unique = true)
     private String codPaziente;
-
     private String note;
-
     private boolean isMinorenne;
+    @Enumerated(EnumType.STRING)
+    private TipoTutore tipoTutore;
 
     // COSTRUTTORE SE MAGGIORENNE
     public Paziente(String codiceFiscale,
@@ -56,12 +54,14 @@ public class Paziente extends User {
                     LocalDate dataDiNascita,
                     String luogoDiNascita,
                     GenitoreTutore genitoreTutore,
+                    TipoTutore tipoTutore,
                     String note) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita);
         this.isMinorenne = calcolaSeMinorenne();
         this.setRuolo(Ruolo.PAZIENTE);
         this.codPaziente = codPaziente;
         this.genitoreTutore = genitoreTutore;
+        this.tipoTutore = tipoTutore;
         this.note = note;
     }
 

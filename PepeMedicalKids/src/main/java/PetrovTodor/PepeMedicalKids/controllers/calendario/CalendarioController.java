@@ -41,8 +41,8 @@ public class CalendarioController {
         return this.eventoGenericoService.saveEventoGenerico(body);
     }
 
-    //POST UPDATE
-    @PutMapping("/updateEventi/{id}")
+    //PUT UPDATE
+    @PutMapping("/updateEventiGenerici/{id}")
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
     public List<EventoGenerico> updateEventoGenerico(@PathVariable UUID id, @RequestBody EventoGenericoDTO payload) throws MessagingException {
         return this.eventoGenericoService.modificaEventoGenerico(id, payload);

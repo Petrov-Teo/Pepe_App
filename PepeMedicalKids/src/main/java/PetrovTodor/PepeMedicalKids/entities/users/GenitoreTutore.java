@@ -2,7 +2,6 @@ package PetrovTodor.PepeMedicalKids.entities.users;
 
 
 import PetrovTodor.PepeMedicalKids.enums.Ruolo;
-import PetrovTodor.PepeMedicalKids.enums.TipoTutore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -25,7 +24,7 @@ import java.util.List;
 public class GenitoreTutore extends User {
     private String codGenitore;
     private String note;
-    private TipoTutore tipoTutore;
+
 
     @OneToMany(mappedBy = "genitoreTutore")
     private List<Paziente> pazienti;
@@ -39,11 +38,9 @@ public class GenitoreTutore extends User {
                           String password,
                           String numeroDiTelefono,
                           String note,
-                          TipoTutore tipoTutore,
                           List<Paziente> pazienti) {
         super(codiceFiscale, nome, cognome, dataDiNascita, luogoDiNascita, email, password, numeroDiTelefono);
         this.note = note;
-        this.tipoTutore = tipoTutore;
         this.pazienti = pazienti;
         this.setRuolo(Ruolo.GENITORE);
     }

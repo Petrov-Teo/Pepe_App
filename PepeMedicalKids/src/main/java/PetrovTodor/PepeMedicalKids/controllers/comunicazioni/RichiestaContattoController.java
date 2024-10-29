@@ -46,6 +46,20 @@ public class RichiestaContattoController {
         return this.richiestaContattoService.findAndGestisci(id);
     }
 
+    @PostMapping("/archivia/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','RECEPTIONIST')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RichiestaContatto findAndArchivia(@PathVariable UUID id) {
+        return this.richiestaContattoService.findAndArchivia(id);
+    }
+
+    @PostMapping("/rimetti-in-gestione/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','RECEPTIONIST')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RichiestaContatto findAndRimange(@PathVariable UUID id) {
+        return this.richiestaContattoService.findAndRimanage(id);
+    }
+
     @PutMapping("/modifica/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN','RECEPTIONIST')")
     @ResponseStatus(HttpStatus.CREATED)
