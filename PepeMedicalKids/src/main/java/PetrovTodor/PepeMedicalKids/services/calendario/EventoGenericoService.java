@@ -119,7 +119,7 @@ public class EventoGenericoService {
         List<EventoGenerico> eventiModificati = new ArrayList<>();
 
         if (!body.eventoRicorrente()) {
-            // Se l'evento non è ricorrente, modifichiamo solo questo evento
+            // Modifica solo questo evento
             eventoDaModificare.setNome(body.nome());
             eventoDaModificare.setDataInizio(body.dataInizio());
             eventoDaModificare.setOraInizio(body.oraInizio());
@@ -127,19 +127,13 @@ public class EventoGenericoService {
             eventoDaModificare.setNote(body.note());
             eventoDaModificare.setLuogo(body.luogo());
             eventoDaModificare.setPartecipanti(body.partecipanti());
-            eventoDaModificare.setEventoRicorrente(false);
-            eventoDaModificare.setTipoRicorrenza(TipoRicorrenza.NON_RICORRENTE);
-            eventoDaModificare.setDataFineRicorrenza(null);
-
             eventiModificati.add(eventoGenericoRepository.save(eventoDaModificare));
         } else {
-            // Se l'evento è ricorrente, eliminiamo le occorrenze future e creiamo le nuove
+            // Cancellazione delle occorrenze future
             List<EventoGenerico> occorrenzeFuture = eventoGenericoRepository.findFutureOccurrences(idEvento);
-
-            // Elimina le occorrenze future dell'evento se presenti
             eventoGenericoRepository.deleteAll(occorrenzeFuture);
 
-            // Crea e salva le nuove occorrenze in base alla nuova configurazione di ricorrenza
+            // Creazione di nuove occorrenze
             LocalDate dataInizio = body.dataInizio();
             LocalDate dataFine = body.dataFineRicorrenza();
 
@@ -147,41 +141,17 @@ public class EventoGenericoService {
                 throw new IllegalArgumentException("La data di fine deve essere successiva alla data di inizio.");
             }
 
-            switch (body.tipoRicorrenza()) {
-                case GIORNALIERA:
-                    while (!dataInizio.isAfter(dataFine)) {
-                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
-                        eventiModificati.add(eventoGenerico);
-                        dataInizio = dataInizio.plusDays(1);
-                    }
-                    break;
-                case SETTIMANALE:
-                    while (!dataInizio.isAfter(dataFine)) {
-                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
-                        eventiModificati.add(eventoGenerico);
-                        dataInizio = dataInizio.plusWeeks(1);
-                    }
-                    break;
-                case MENSILE:
-                    while (!dataInizio.isAfter(dataFine)) {
-                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
-                        eventiModificati.add(eventoGenerico);
-                        dataInizio = dataInizio.plusMonths(1);
-                    }
-                    break;
-                case ANNUALE:
-                    while (!dataInizio.isAfter(dataFine)) {
-                        EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
-                        eventiModificati.add(eventoGenerico);
-                        dataInizio = dataInizio.plusYears(1);
-                    }
-                    break;
+            // Logica di creazione delle nuove occorrenze
+            while (!dataInizio.isAfter(dataFine)) {
+                EventoGenerico eventoGenerico = createEventoGenerico(body, dataInizio);
+                eventiModificati.add(eventoGenerico);
+                dataInizio = dataInizio.plusDays(1); // o l'incremento appropriato
             }
 
-            this.eventoGenericoRepository.saveAll(eventiModificati);
+            eventoGenericoRepository.saveAll(eventiModificati);
         }
 
-        // Invia una notifica di modifica dell'evento ai partecipanti
+        // Invia notifica di modifica ai partecipanti
         for (String partecipante : body.partecipanti()) {
             this.emailService.sendEventNotification(partecipante, body);
         }

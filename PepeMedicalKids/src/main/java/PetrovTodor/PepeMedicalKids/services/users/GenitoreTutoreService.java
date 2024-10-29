@@ -65,7 +65,6 @@ public class GenitoreTutoreService {
                 passwordEncoder.encode(body.password()),
                 body.numeroDiTelefono(),
                 body.note(),
-                body.tipoTutore(),
                 pazientiAssociati
         );
 
@@ -214,5 +213,5 @@ public class GenitoreTutoreService {
 
         return password.toString();
     }
-    
+
 }

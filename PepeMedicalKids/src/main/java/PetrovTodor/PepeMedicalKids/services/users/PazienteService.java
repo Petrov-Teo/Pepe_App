@@ -92,6 +92,7 @@ public class PazienteService {
                 body.dataDiNascita(),
                 body.luogoDiNascita(),
                 genitoreTutore,
+                body.tipoTutore(),
                 body.note());
         if (paziente.isMinorenne() && paziente.getGenitoreTutore() == null) {
             throw new IllegalArgumentException("Il paziente è minorenne e deve avere un genitore o tutore associato.");
@@ -132,6 +133,7 @@ public class PazienteService {
         found.setLuogoDiNascita(body.luogoDiNascita());
         found.setCodiceFiscale(body.codiceFiscale());
         found.setGenitoreTutore(genitoreTutore);
+        found.setTipoTutore(body.tipoTutore());
         found.setNote(body.note());
 
         return this.pazienteRepository.save(found);

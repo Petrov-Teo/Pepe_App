@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -44,8 +45,7 @@ public class RichiestaContattoService {
     public RichiestaContatto findByIdRichiestaContatto(UUID idRichiestaContatto) {
         RichiestaContatto richiestaContatto = this.richiestaContattoRepository
                 .findById(idRichiestaContatto)
-                .orElseThrow(()
-                        -> new NotFoundException(idRichiestaContatto));
+                .orElseThrow(() -> new NotFoundException(idRichiestaContatto));
         richiestaContatto.changeLetto();
         return this.richiestaContattoRepository.save(richiestaContatto);
     }
@@ -55,9 +55,32 @@ public class RichiestaContattoService {
                 .findById(idRichiestaContatto)
                 .orElseThrow(()
                         -> new NotFoundException(idRichiestaContatto));
-        richiestaContatto.changeGestito();
+
+        richiestaContatto.setGestito(true);
+        richiestaContatto.setDataGestione(LocalDateTime.now());
         return this.richiestaContattoRepository.save(richiestaContatto);
     }
+
+    public RichiestaContatto findAndArchivia(UUID idRichiestaContatto) {
+        RichiestaContatto richiestaContatto = this.richiestaContattoRepository
+                .findById(idRichiestaContatto)
+                .orElseThrow(()
+                        -> new NotFoundException(idRichiestaContatto));
+        richiestaContatto.setArchivia(true);
+        richiestaContatto.setDataArchiviazione(LocalDateTime.now());
+        return this.richiestaContattoRepository.save(richiestaContatto);
+    }
+
+    public RichiestaContatto findAndRimanage(UUID idRichiestaContatto) {
+        RichiestaContatto richiestaContatto = this.richiestaContattoRepository
+                .findById(idRichiestaContatto)
+                .orElseThrow(()
+                        -> new NotFoundException(idRichiestaContatto));
+        richiestaContatto.setArchivia(false);
+        richiestaContatto.setGestito(false);
+        return this.richiestaContattoRepository.save(richiestaContatto);
+    }
+
 
     public RichiestaContatto findByName(String nome) {
         return this.richiestaContattoRepository
