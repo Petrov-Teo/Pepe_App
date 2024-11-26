@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -24,6 +25,7 @@ import java.util.List;
 public class GenitoreTutore extends User {
     private String codGenitore;
     private String note;
+    private boolean passwordTemporanea;
 
 
     @OneToMany(mappedBy = "genitoreTutore")
@@ -43,22 +45,33 @@ public class GenitoreTutore extends User {
         this.note = note;
         this.pazienti = pazienti;
         this.setRuolo(Ruolo.GENITORE);
+        this.passwordTemporanea = false;
     }
 
     public void generaCodice(String ultimoCodice) {
-        String primaLetteraRuolo = String.valueOf(this.getRuolo().name().charAt(0));
-        int codiceBase = 100;
-        this.codGenitore = primaLetteraRuolo + codiceBase + ultimoCodice;
+        int codiceNumerico = 1001; // Valore iniziale predefinito
+        if (ultimoCodice != null && !ultimoCodice.isEmpty() && ultimoCodice.length() > 1) {
+            String parteNumerica = ultimoCodice.substring(1);
+            try {
+                codiceNumerico = Integer.parseInt(parteNumerica) + 1;
+            } catch (NumberFormatException e) {
+                System.err.println("Errore nel parsing del codice numerico: " + e.getMessage());
+            }
+        }
+
+        char primaLetteraRuolo = this.getRuolo().name().charAt(0);
+        this.codGenitore = primaLetteraRuolo + String.valueOf(codiceNumerico);
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of((new SimpleGrantedAuthority(this.getRuolo().name())));
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return this.getEmail();
     }
+
 }

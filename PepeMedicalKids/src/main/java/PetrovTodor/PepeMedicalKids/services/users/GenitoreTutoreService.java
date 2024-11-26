@@ -43,6 +43,7 @@ public class GenitoreTutoreService {
 
         String ultimoCodice = genitoreTutoreRepository.findMaxCodGenitore();
 
+
         List<Paziente> pazientiAssociati = new ArrayList<>();
 
         for (Paziente codPaziente : body.pazienti()) {
@@ -165,6 +166,7 @@ public class GenitoreTutoreService {
 
         String hashedNewPassword = passwordEncoder.encode(passwordResetDTO.newPassword());
         foundGeniotre.setPassword(hashedNewPassword);
+        foundGeniotre.setPasswordTemporanea(false);
 
         String subject = "Cambio Password";
         String text = "La tua password è stata cambiata con successo!";
@@ -184,6 +186,7 @@ public class GenitoreTutoreService {
         String temporaryPassword = generateTemporaryPassword();
 
         foundGenitore.setPassword(passwordEncoder.encode(temporaryPassword));
+        foundGenitore.setPasswordTemporanea(true);
         genitoreTutoreRepository.save(foundGenitore);
 
         String subject = "Reset Password";
@@ -196,7 +199,6 @@ public class GenitoreTutoreService {
         } catch (EmailSendingException e) {
             throw new EmailSendingException("Impossibile inviare l'email con la password provvisoria.");
         }
-
         return foundGenitore;
     }
 
@@ -212,6 +214,27 @@ public class GenitoreTutoreService {
         }
 
         return password.toString();
+    }
+
+    // FIND GENITORE AND UPDITE
+    public GenitoreTutore findAndUpdate(UUID id, GenitoreTutoreDTO body) {
+        GenitoreTutore find = findById(id);
+        find.setCognome(body.cognome());
+        find.setNome(body.nome());
+        find.setCodiceFiscale(body.codiceFiscale());
+        find.setDataDiNascita(body.dataDiNascita());
+        find.setLuogoDiNascita(body.luogoDiNascita());
+        find.setEmail(body.email());
+        find.setNumeroDiTelefono(body.numeroDiTelefono());
+        find.setNote(body.note());
+        find.setPazienti(body.pazienti());
+        return this.genitoreTutoreRepository.save(find);
+    }
+
+    //DELETE
+    public void findAndDelete(UUID id) {
+        GenitoreTutore find = findById(id);
+        this.genitoreTutoreRepository.delete(find);
     }
 
 }
