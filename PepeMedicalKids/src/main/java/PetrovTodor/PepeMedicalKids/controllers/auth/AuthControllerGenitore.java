@@ -1,6 +1,7 @@
 package PetrovTodor.PepeMedicalKids.controllers.auth;
 
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
+import PetrovTodor.PepeMedicalKids.payload.user.GenitoreTutoreDTO;
 import PetrovTodor.PepeMedicalKids.payload.user.LoginRequestDTO;
 import PetrovTodor.PepeMedicalKids.payload.user.LoginResponseTokenDTO;
 import PetrovTodor.PepeMedicalKids.payload.user.PasswordResetMailDTO;
@@ -24,10 +25,14 @@ public class AuthControllerGenitore {
     @Autowired
     private AuthService authService;
 
+    @PostMapping("/register/genitori")
+    public GenitoreTutore save(@RequestBody GenitoreTutoreDTO genitore) throws MessagingException {
+        return this.genitoreTutoreService.saveGenitoreTutore(genitore);
+    }
 
-    @PostMapping("/login/tutor/")
-    public LoginResponseTokenDTO loginAdmin(@RequestBody LoginRequestDTO payload) throws MessagingException {
-        return new LoginResponseTokenDTO(this.authService.controlloCredenzialiAndGenerazioneTokenADmin(payload));
+    @PostMapping("/login/tutori")
+    public LoginResponseTokenDTO loginGeniore(@RequestBody LoginRequestDTO payload) throws MessagingException {
+        return new LoginResponseTokenDTO(this.authService.controlloCredenzialiAndGenerazioneTokenGenitore(payload));
     }
 
     @PostMapping("/reset-password/tutor")

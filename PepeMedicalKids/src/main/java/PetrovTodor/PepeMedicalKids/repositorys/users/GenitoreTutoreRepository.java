@@ -14,7 +14,6 @@ public interface GenitoreTutoreRepository extends JpaRepository<GenitoreTutore, 
     @Query("SELECT MAX(a.codGenitore) FROM GenitoreTutore a")
     String findMaxCodGenitore();
 
-
     Optional<GenitoreTutore> findByCodGenitore(String codGenitore);
 
     Optional<GenitoreTutore> findByNome(String nome);

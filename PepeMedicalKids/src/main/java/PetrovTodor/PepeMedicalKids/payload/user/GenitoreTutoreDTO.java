@@ -24,8 +24,6 @@ public record GenitoreTutoreDTO(
         String password,
         @NotBlank(message = "Il Campo Numero di Telefono è obbligatorio!")
         String numeroDiTelefono,
-
         String note,
-        @NotBlank(message = "Il Campo Tipo Tutore è obbligatorio!")
         List<Paziente> pazienti) {
 }
