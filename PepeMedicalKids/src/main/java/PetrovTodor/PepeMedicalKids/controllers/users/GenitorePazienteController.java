@@ -24,7 +24,7 @@ public class GenitorePazienteController {
     // FIND ALL
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','RECEPTIONIST')")
     public Page<GenitoreTutore> findAll(@RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "10") int size,
                                         @RequestParam(defaultValue = "codGenitore") String sorteBy) {
@@ -43,9 +43,6 @@ public class GenitorePazienteController {
         return genitore;
     }
 
-    //SAVE
-
-
     //FIND BY ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
@@ -53,10 +50,10 @@ public class GenitorePazienteController {
         return genitoreTutoreService.findById(id);
     }
 
-    //UPDATE MEDICO
+    //UPDATE PAZIENTE
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN','GENITORE')")
     public GenitoreTutore updateGenitore(@PathVariable UUID id, @RequestBody GenitoreTutoreDTO payload) throws MessagingException {
         return this.genitoreTutoreService.findAndUpdate(id, payload);
     }

@@ -3,9 +3,11 @@ package PetrovTodor.PepeMedicalKids.security;
 import PetrovTodor.PepeMedicalKids.entities.users.Admin;
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
 import PetrovTodor.PepeMedicalKids.entities.users.Medico;
+import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
 import PetrovTodor.PepeMedicalKids.services.users.AdminService;
 import PetrovTodor.PepeMedicalKids.services.users.GenitoreTutoreService;
 import PetrovTodor.PepeMedicalKids.services.users.MedicoService;
+import PetrovTodor.PepeMedicalKids.services.users.PazienteService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +37,8 @@ public class JWTChekFilter extends OncePerRequestFilter {
 
     @Autowired
     private GenitoreTutoreService genitoreTutoreService;
+    @Autowired
+    private PazienteService pazienteService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -82,6 +86,7 @@ public class JWTChekFilter extends OncePerRequestFilter {
                 case "RECEPTIONIST":
                     // Implementa la logica per Receptionist se necessario
                     break;
+
                 case "GENITORE":
 
                     Optional<GenitoreTutore> genitoreTutore = Optional.ofNullable(genitoreTutoreService.findById(UUID.fromString(id)));
@@ -91,6 +96,17 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(genitoreAuth);
                         System.out.println("Authenticated as Medico: " + ((GenitoreTutore) user).getIdUtente());
                         System.out.println("Authorities: " + ((GenitoreTutore) user).getAuthorities());
+                    }
+                    break;
+                case "PAZIENTE":
+
+                    Optional<Paziente> paziente = Optional.ofNullable(pazienteService.findPazienteByID(UUID.fromString(id)));
+                    if (paziente.isPresent()) {
+                        user = paziente.get();
+                        Authentication pazienteAuth = new UsernamePasswordAuthenticationToken(user, null, ((Paziente) user).getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(pazienteAuth);
+                        System.out.println("Authenticated as Medico: " + ((Paziente) user).getIdUtente());
+                        System.out.println("Authorities: " + ((Paziente) user).getAuthorities());
                     }
                     break;
 
