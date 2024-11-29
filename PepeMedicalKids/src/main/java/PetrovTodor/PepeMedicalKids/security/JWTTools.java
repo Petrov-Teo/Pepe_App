@@ -47,7 +47,7 @@ public class JWTTools {
                 .parseClaimsJws(token)
                 .getBody();
         String ruolo = claims.get("ruolo", String.class);
-        System.out.println("Ruolo estratto: " + ruolo);  // Aggiungi un log per il ruolo estratto
+
         return ruolo;
     }
 }
