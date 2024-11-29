@@ -18,8 +18,6 @@ public record ReceptionistDTO(
         String luogoDiNascita,
         @NotBlank(message = "Il Campo Email è Obbligatorio!")
         String email,
-        @NotBlank(message = "Il Campo  Password è Obbligatorio!")
-        String password,
         @NotBlank(message = "Il Campo  Numero di Telefono  Obbligatorio!")
         String numeroDiTelefono) {
 }

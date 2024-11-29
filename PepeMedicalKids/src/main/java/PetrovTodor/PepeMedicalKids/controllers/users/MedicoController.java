@@ -34,7 +34,7 @@ public class MedicoController {
                                 @RequestParam(defaultValue = "10") int size,
                                 @RequestParam(defaultValue = "codMedico") String sorteBy) {
 
-        return medicoService.findAll(page, size, sorteBy);
+        return this.medicoService.findAll(page, size, sorteBy);
     }
 
     // FIND ME
@@ -45,7 +45,7 @@ public class MedicoController {
             throw new IllegalArgumentException("L'utente non è autenticato!");
         }
         String username = userDetails.getUsername();
-        Medico medico = medicoService.findMedicoByEmail(username);
+        Medico medico = this.medicoService.findMedicoByEmail(username);
         return medico;
     }
 
@@ -60,8 +60,8 @@ public class MedicoController {
     //FIND BY ID
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('RECEPTIONIST','ADMIN')")
-    public Medico getAdminById(@PathVariable UUID id) throws MessagingException {
-        return medicoService.findMedicoByIdMedico(id);
+    public Medico getMedicoById(@PathVariable UUID id) throws MessagingException {
+        return this.medicoService.findMedicoByIdMedico(id);
 
     }
 

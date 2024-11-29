@@ -35,7 +35,7 @@ public class ReceptionistService {
     public Receptionist saveReceptionist(ReceptionistDTO body) throws MessagingException {
 
         String ultimoCodice = receptionistRepository.findMaxCodReceptionist();
-
+        String password = generateTemporaryPassword();
         Receptionist nuovoReceptionist = new Receptionist(
                 body.codiceFiscale(),
                 body.nome(),
@@ -43,7 +43,7 @@ public class ReceptionistService {
                 body.dataDiNascita(),
                 body.luogoDiNascita(),
                 body.email(),
-                passwordEncoder.encode(body.password()),
+                passwordEncoder.encode(password),
                 body.numeroDiTelefono()
         );
 
@@ -53,8 +53,8 @@ public class ReceptionistService {
 
         String email = body.email();
         String oggetto = "Account Creato Correttamente!";
-        String htmlText = generateWelcomeEmailHtml(body);
-
+        String htmlText = generateWelcomeEmailHtml(body, password);
+        System.out.println(password);
         try {
             emailService.sendHtmlMessage(email, oggetto, htmlText);
         } catch (MessagingException e) {
@@ -64,12 +64,14 @@ public class ReceptionistService {
         return savedReceptionist;
     }
 
-    private String generateWelcomeEmailHtml(ReceptionistDTO admin) {
+    private String generateWelcomeEmailHtml(ReceptionistDTO receptionist, String temporaryPassword) {
         return "<html>"
                 + "<body>"
                 + "<h1 style='color: #4CAF50;'>Benvenuto su Pepe Medical Kids!</h1>"
-                + "<p>Ciao <b>" + admin.nome() + " " + admin.cognome() + "</b>,</p>"
-                + "<p>Grazie di esserti registrato. Siamo felici di averti con noi.</p>"
+                + "<p>Ciao <b>" + receptionist.nome() + " " + receptionist.cognome() + "</b>,</p>"
+                + "<p>La tua password temporanea è: <b>" + temporaryPassword + "</b></p>"
+                + "<p> Ti invitiamo a cambiarla al tuo primo accesso! </p> "
+                + "<p> Siamo felici di averti con noi.</p>"
                 + "<p>Accedi al tuo account <a href='https://www.pepemedicalkids.com/login'>qui</a> e inizia a esplorare i nostri servizi!</p>"
                 + "<br><p>Ti aspettiamo presto!</p>"
                 + "<p>Il Team di Pepe Medical Kids</p>"
@@ -161,7 +163,7 @@ public class ReceptionistService {
 
         String subject = "Cambio Password";
         String text = "La tua password è stata cambiata con successo!";
-
+        foundAdmin.setPasswordTemporanea(false);
         Receptionist updatedAdmin = this.receptionistRepository.save(foundAdmin);
 
         emailService.sendSimpleMessage(foundAdmin.getEmail(), subject, text);
@@ -177,6 +179,7 @@ public class ReceptionistService {
         String temporaryPassword = generateTemporaryPassword();
 
         foundReceptionist.setPassword(passwordEncoder.encode(temporaryPassword));
+        foundReceptionist.setPasswordTemporanea(true);
         receptionistRepository.save(foundReceptionist);
 
         String subject = "Reset Password";

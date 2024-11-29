@@ -22,8 +22,6 @@ public record PazienteMaggiorenneDTO(
         String password,
         @NotBlank(message = "Il Campo Numero di Telefono è Obbligatorio!")
         String numeroDiTelefono,
-        String note,
-        @NotNull(message = "Il Campo Minorenne S/N di Telefono è Obbligatorio!")
-        boolean isMinorenne
+        String note
 ) {
 }

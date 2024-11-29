@@ -31,6 +31,8 @@ public class Paziente extends User {
     private boolean isMinorenne;
     @Enumerated(EnumType.STRING)
     private TipoTutore tipoTutore;
+    private boolean passwordTemporanea;
+
 
     // COSTRUTTORE SE MAGGIORENNE
     public Paziente(String codiceFiscale,
@@ -46,6 +48,7 @@ public class Paziente extends User {
         this.setRuolo(Ruolo.PAZIENTE);
         this.codPaziente = codPaziente;
         this.note = note;
+        this.passwordTemporanea = false;
     }
 
     // COSTRUTTORE SE MINORENNE
