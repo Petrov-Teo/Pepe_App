@@ -62,8 +62,6 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         user = adminOptional.get();
                         Authentication adminAuth = new UsernamePasswordAuthenticationToken(user, null, ((Admin) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(adminAuth);
-                        System.out.println("Authenticated as ADMIN: " + ((Admin) user).getIdUtente());
-                        System.out.println("Authorities: " + ((Admin) user).getAuthorities());
                     }
                     break;
 
@@ -74,8 +72,7 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         user = medicoOptional.get();
                         Authentication medicoAuth = new UsernamePasswordAuthenticationToken(user, null, ((Medico) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(medicoAuth);
-                        System.out.println("Authenticated as Medico: " + ((Medico) user).getIdUtente());
-                        System.out.println("Authorities: " + ((Medico) user).getAuthorities());
+
                     }
                     break;
 
@@ -85,8 +82,7 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         user = receptionist.get();
                         Authentication genitoreAuth = new UsernamePasswordAuthenticationToken(user, null, ((Receptionist) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(genitoreAuth);
-                        System.out.println("Authenticated as Genitore: " + ((Receptionist) user).getIdUtente());
-                        System.out.println("Authorities: " + ((Receptionist) user).getAuthorities());
+
                     }
                     break;
 
@@ -97,8 +93,7 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         user = genitoreTutore.get();
                         Authentication genitoreAuth = new UsernamePasswordAuthenticationToken(user, null, ((GenitoreTutore) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(genitoreAuth);
-                        System.out.println("Authenticated as Genitore: " + ((GenitoreTutore) user).getIdUtente());
-                        System.out.println("Authorities: " + ((GenitoreTutore) user).getAuthorities());
+
                     }
                     break;
                 case "PAZIENTE":
@@ -107,8 +102,7 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         user = paziente.get();
                         Authentication pazienteAuth = new UsernamePasswordAuthenticationToken(user, null, ((Paziente) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(pazienteAuth);
-                        System.out.println("Authenticated as Paziente: " + ((Paziente) user).getIdUtente());
-                        System.out.println("Authorities: " + ((Paziente) user).getAuthorities());
+
                     }
                     break;
 
