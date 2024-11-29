@@ -1,14 +1,10 @@
 package PetrovTodor.PepeMedicalKids.services.auth;
 
-import PetrovTodor.PepeMedicalKids.entities.users.Admin;
-import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
-import PetrovTodor.PepeMedicalKids.entities.users.Medico;
+import PetrovTodor.PepeMedicalKids.entities.users.*;
 import PetrovTodor.PepeMedicalKids.exceptions.UnauthorizedException;
 import PetrovTodor.PepeMedicalKids.payload.user.LoginRequestDTO;
 import PetrovTodor.PepeMedicalKids.security.JWTTools;
-import PetrovTodor.PepeMedicalKids.services.users.AdminService;
-import PetrovTodor.PepeMedicalKids.services.users.GenitoreTutoreService;
-import PetrovTodor.PepeMedicalKids.services.users.MedicoService;
+import PetrovTodor.PepeMedicalKids.services.users.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,13 +12,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
     @Autowired
-    AdminService adminService;
+    private AdminService adminService;
     @Autowired
-    MedicoService medicoService;
+    private MedicoService medicoService;
     @Autowired
-    GenitoreTutoreService genitoreTutoreService;
+    private GenitoreTutoreService genitoreTutoreService;
     @Autowired
-    PasswordEncoder bcrypt;
+    private PazienteService pazienteService;
+    @Autowired
+    private ReceptionistService receptionistService;
+    @Autowired
+    private PasswordEncoder bcrypt;
     @Autowired
     private JWTTools jwtTools;
 
@@ -48,6 +48,26 @@ public class AuthService {
 
     public String controlloCredenzialiAndGenerazioneTokenGenitore(LoginRequestDTO payload) {
         GenitoreTutore found = genitoreTutoreService.findByEmail(payload.email());
+        if (bcrypt.matches(payload.password(), found.getPassword())) {
+
+            return jwtTools.createToken(found);
+        } else {
+            throw new UnauthorizedException("Credenziali Errate!");
+        }
+    }
+
+    public String controlloCredenzialiAndGenerazioneTokenPaziente(LoginRequestDTO payload) {
+        Paziente found = pazienteService.findByEmail(payload.email());
+        if (bcrypt.matches(payload.password(), found.getPassword())) {
+
+            return jwtTools.createToken(found);
+        } else {
+            throw new UnauthorizedException("Credenziali Errate!");
+        }
+    }
+
+    public String controlloCredenzialiAndGenerazioneTokenReceptionist(LoginRequestDTO payload) {
+        Receptionist found = receptionistService.findByEmail(payload.email());
         if (bcrypt.matches(payload.password(), found.getPassword())) {
 
             return jwtTools.createToken(found);

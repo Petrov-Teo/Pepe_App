@@ -24,6 +24,7 @@ public class Receptionist extends User {
     private String codReceptionist;
     private LocalDate dataAssunzione;
     private LocalDate dataTermine;
+    private boolean passwordTemporanea;
 
 
     public Receptionist(String codiceFiscale, String nome, String cognome, LocalDate dataDiNascita, String luogoDiNascita, String email, String password, String numeroDiTelefono) {
@@ -38,12 +39,22 @@ public class Receptionist extends User {
                 numeroDiTelefono);
         this.dataAssunzione = LocalDate.now();
         this.setRuolo(Ruolo.RECEPTIONIST);
+        this.passwordTemporanea = true;
     }
 
     public void generaCodice(String ultimoCodice) {
-        String primaLetteraRuolo = String.valueOf(this.getRuolo().name().charAt(0));
-        int codiceBase = 100;
-        this.codReceptionist = primaLetteraRuolo + "/" + codiceBase + ultimoCodice; // creare query in Reposytory
+        int codiceNumerico = 101; // Valore iniziale predefinito
+        if (ultimoCodice != null && !ultimoCodice.isEmpty() && ultimoCodice.length() > 1) {
+            String parteNumerica = ultimoCodice.substring(1);
+            try {
+                codiceNumerico = Integer.parseInt(parteNumerica) + 1;
+            } catch (NumberFormatException e) {
+                System.err.println("Errore nel parsing del codice numerico: " + e.getMessage());
+            }
+        }
+
+        char primaLetteraRuolo = this.getRuolo().name().charAt(0);
+        this.codReceptionist = primaLetteraRuolo + String.valueOf(codiceNumerico);
     }
 
     @Override

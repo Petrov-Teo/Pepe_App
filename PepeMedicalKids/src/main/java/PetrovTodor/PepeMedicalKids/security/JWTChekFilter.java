@@ -1,13 +1,7 @@
 package PetrovTodor.PepeMedicalKids.security;
 
-import PetrovTodor.PepeMedicalKids.entities.users.Admin;
-import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
-import PetrovTodor.PepeMedicalKids.entities.users.Medico;
-import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
-import PetrovTodor.PepeMedicalKids.services.users.AdminService;
-import PetrovTodor.PepeMedicalKids.services.users.GenitoreTutoreService;
-import PetrovTodor.PepeMedicalKids.services.users.MedicoService;
-import PetrovTodor.PepeMedicalKids.services.users.PazienteService;
+import PetrovTodor.PepeMedicalKids.entities.users.*;
+import PetrovTodor.PepeMedicalKids.services.users.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +33,8 @@ public class JWTChekFilter extends OncePerRequestFilter {
     private GenitoreTutoreService genitoreTutoreService;
     @Autowired
     private PazienteService pazienteService;
+    @Autowired
+    private ReceptionistService receptionistService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -84,7 +80,14 @@ public class JWTChekFilter extends OncePerRequestFilter {
                     break;
 
                 case "RECEPTIONIST":
-                    // Implementa la logica per Receptionist se necessario
+                    Optional<Receptionist> receptionist = Optional.ofNullable(receptionistService.findById(UUID.fromString(id)));
+                    if (receptionist.isPresent()) {
+                        user = receptionist.get();
+                        Authentication genitoreAuth = new UsernamePasswordAuthenticationToken(user, null, ((Receptionist) user).getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(genitoreAuth);
+                        System.out.println("Authenticated as Genitore: " + ((Receptionist) user).getIdUtente());
+                        System.out.println("Authorities: " + ((Receptionist) user).getAuthorities());
+                    }
                     break;
 
                 case "GENITORE":
@@ -94,18 +97,17 @@ public class JWTChekFilter extends OncePerRequestFilter {
                         user = genitoreTutore.get();
                         Authentication genitoreAuth = new UsernamePasswordAuthenticationToken(user, null, ((GenitoreTutore) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(genitoreAuth);
-                        System.out.println("Authenticated as Medico: " + ((GenitoreTutore) user).getIdUtente());
+                        System.out.println("Authenticated as Genitore: " + ((GenitoreTutore) user).getIdUtente());
                         System.out.println("Authorities: " + ((GenitoreTutore) user).getAuthorities());
                     }
                     break;
                 case "PAZIENTE":
-
                     Optional<Paziente> paziente = Optional.ofNullable(pazienteService.findPazienteByID(UUID.fromString(id)));
                     if (paziente.isPresent()) {
                         user = paziente.get();
                         Authentication pazienteAuth = new UsernamePasswordAuthenticationToken(user, null, ((Paziente) user).getAuthorities());
                         SecurityContextHolder.getContext().setAuthentication(pazienteAuth);
-                        System.out.println("Authenticated as Medico: " + ((Paziente) user).getIdUtente());
+                        System.out.println("Authenticated as Paziente: " + ((Paziente) user).getIdUtente());
                         System.out.println("Authorities: " + ((Paziente) user).getAuthorities());
                     }
                     break;

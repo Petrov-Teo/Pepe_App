@@ -4,6 +4,8 @@ import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
 import PetrovTodor.PepeMedicalKids.entities.users.Paziente;
 import PetrovTodor.PepeMedicalKids.exceptions.EmailSendingException;
 import PetrovTodor.PepeMedicalKids.exceptions.NotFoundException;
+import PetrovTodor.PepeMedicalKids.payload.user.PasswordResetDTO;
+import PetrovTodor.PepeMedicalKids.payload.user.PasswordResetMailDTO;
 import PetrovTodor.PepeMedicalKids.payload.user.PazienteMaggiorenneDTO;
 import PetrovTodor.PepeMedicalKids.payload.user.PazienteMinorenneDTO;
 import PetrovTodor.PepeMedicalKids.repositorys.users.PazienteRepository;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -140,8 +143,8 @@ public class PazienteService {
     }
 
     //FIND AND UPDITE MAGGIORENNE
-    public Paziente findAndUpdateMaggiorenne(String codPaziente, PazienteMaggiorenneDTO body) {
-        Paziente found = findPazienteByCodPaziente(codPaziente);
+    public Paziente findAndUpdateMaggiorenne(UUID id, PazienteMaggiorenneDTO body) {
+        Paziente found = findPazienteByID(id);
         found.setCodiceFiscale(body.codiceFiscale());
         found.setNome(body.nome());
         found.setCognome(body.cognome());
@@ -191,5 +194,64 @@ public class PazienteService {
                 .orElseThrow(() -> new NotFoundException("Nessun Paziente trovato con la seguente email: " + email + "!"));
     }
 
+    // RESET PASSWORD
+    public Paziente resetPassword(UUID idPaziente, PasswordResetDTO passwordResetDTO) {
+        Paziente foundPaziente = findPazienteByID(idPaziente);
+
+        if (!passwordEncoder.matches(passwordResetDTO.oldPassword(), foundPaziente.getPassword())) {
+            throw new IllegalArgumentException("La vecchia password non è corretta!");
+        }
+
+        String hashedNewPassword = passwordEncoder.encode(passwordResetDTO.newPassword());
+        foundPaziente.setPassword(hashedNewPassword);
+        foundPaziente.setPasswordTemporanea(false);
+
+        String subject = "Cambio Password";
+        String text = "La tua password è stata cambiata con successo!";
+
+        Paziente updatedPaziente = this.pazienteRepository.save(foundPaziente);
+
+        emailService.sendSimpleMessage(foundPaziente.getEmail(), subject, text);
+
+        return updatedPaziente;
+    }
+
+    //RESET PASSWORD CON EMEIL
+    public Paziente resetPasswordConMail(PasswordResetMailDTO passwordResetMailDTO) {
+        Paziente foundPaziente = pazienteRepository.findByEmail(passwordResetMailDTO.email())
+                .orElseThrow(() -> new NotFoundException("Nessun Paziente trovato con l'email: " + passwordResetMailDTO.email()));
+
+        String temporaryPassword = generateTemporaryPassword();
+
+        foundPaziente.setPassword(passwordEncoder.encode(temporaryPassword));
+        foundPaziente.setPasswordTemporanea(true);
+        pazienteRepository.save(foundPaziente);
+
+        String subject = "Reset Password";
+        String text = "La tua password provvisoria è: " + temporaryPassword +
+                "\n\nTi invitiamo a cambiarla al tuo prossimo accesso.";
+
+        try {
+            emailService.sendSimpleMessage(foundPaziente.getEmail(), subject, text);
+            System.out.println(("Email di reset password inviata a {}" + foundPaziente.getEmail()));
+        } catch (EmailSendingException e) {
+            throw new EmailSendingException("Impossibile inviare l'email con la password provvisoria.");
+        }
+        return foundPaziente;
+    }
+
+    private String generateTemporaryPassword() {
+
+        int length = 10;
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+        StringBuilder password = new StringBuilder();
+        Random rnd = new Random();
+
+        for (int i = 0; i < length; i++) {
+            password.append(characters.charAt(rnd.nextInt(characters.length())));
+        }
+
+        return password.toString();
+    }
 
 }

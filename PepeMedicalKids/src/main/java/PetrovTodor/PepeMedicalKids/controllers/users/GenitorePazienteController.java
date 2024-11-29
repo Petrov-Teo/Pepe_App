@@ -1,6 +1,7 @@
 package PetrovTodor.PepeMedicalKids.controllers.users;
 
 import PetrovTodor.PepeMedicalKids.entities.users.GenitoreTutore;
+import PetrovTodor.PepeMedicalKids.exceptions.UnauthorizedException;
 import PetrovTodor.PepeMedicalKids.payload.user.GenitoreTutoreDTO;
 import PetrovTodor.PepeMedicalKids.services.users.GenitoreTutoreService;
 import jakarta.mail.MessagingException;
@@ -36,7 +37,7 @@ public class GenitorePazienteController {
     @PreAuthorize("hasAnyAuthority('GENITORE')")
     public GenitoreTutore findMe(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
-            throw new IllegalArgumentException("L'utente non è autenticato!");
+            throw new UnauthorizedException("L'utente non è autenticato!");
         }
         String username = userDetails.getUsername();
         GenitoreTutore genitore = genitoreTutoreService.findByEmail(username);
